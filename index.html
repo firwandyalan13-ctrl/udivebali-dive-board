@@ -93,7 +93,7 @@
     .date-lockup strong { display: block; color: var(--signal); font: 900 clamp(18px, 2.1vw, 30px)/1 var(--display); letter-spacing: .05em; }
     .date-lockup span { display: block; margin-top: 8px; color: var(--muted); font: 700 11px/1 var(--display); letter-spacing: .18em; text-transform: uppercase; }
 
-    .overview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+    .overview-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
     .slot-card {
       position: relative;
       display: flex;
@@ -377,7 +377,7 @@
       letter-spacing: .21em;
       text-transform: uppercase;
     }
-    .schedule-grid { display: grid; flex: 1 1 auto; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 10px; min-height: 0; }
+    .schedule-grid { display: grid; flex: 1 1 auto; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; min-height: 0; }
     .schedule-column {
       display: grid;
       grid-template-columns: minmax(150px, 1.12fr) minmax(170px, .95fr) minmax(90px, .7fr) minmax(80px, .7fr) minmax(210px, 1.7fr);
@@ -518,7 +518,7 @@
       #board.slide-canvas { aspect-ratio: auto; min-height: calc(100vh - 110px); overflow: visible; }
       .overview-brand-row { grid-template-columns: 1fr 1fr; }
       .schedule-grid { grid-template-rows: none; }
-      .schedule-column { grid-template-columns: 1fr 1fr 1fr 1fr; }
+      .schedule-column { grid-template-columns: 1fr 1fr 1fr; }
       .schedule-site { grid-column: 1 / -1; }
       .group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
       .session-header { grid-template-columns: 1fr 1.5fr; }
@@ -564,9 +564,8 @@
     <div class="control-brand">UDIVEBALI · TULAMBEN</div>
     <nav class="view-nav" aria-label="Dive board views">
       <button type="button" data-view="overview">Overview</button>
-      <button type="button" data-view="slot-0900">09:00</button>
-      <button type="button" data-view="slot-1100">11:00</button>
-      <button type="button" data-view="slot-1400">14:00</button>
+      <button type="button" data-view="slot-11-oclock">11 o'clock</button>
+      <button type="button" data-view="slot-2-oclock">2 o'clock</button>
       <button type="button" data-view="slot-1830">18:30</button>
     </nav>
     <div class="playback-controls" aria-label="Autoplay controls">
@@ -604,27 +603,15 @@
       safety: "DM RATIO 1:3 · Tank check · Buddy check before entry",
       overviewSafety: "DM RATIO 1:3 · Buddy check before entry · Max depth 30m · Safety stop 3 min @ 5m",
       overview: [
-        { id: "slot-0900", time: "09:00", status: "IN WATER", dmGroups: 2, divers: 3, site: "Coral Garden" },
-        { id: "slot-1100", time: "11:00", status: "STANDBY", dmGroups: 2, divers: 3, site: "Dropoff" },
-        { id: "slot-1400", time: "14:00", status: "STANDBY", dmGroups: 2, divers: 2, site: "Liberty Wreck USAT" },
+        { id: "slot-11-oclock", time: "11 o'clock", status: "STANDBY", dmGroups: 2, divers: 3, site: "Dropoff" },
+        { id: "slot-2-oclock", time: "2 o'clock", status: "STANDBY", dmGroups: 2, divers: 2, site: "Liberty Wreck USAT" },
         { id: "slot-1830", time: "18:30", status: "NIGHT DIVE", dmGroups: 1, divers: 1, site: "Liberty Wreck USAT" }
       ],
       sessions: {
-        "slot-0900": {
-          sourceTime: "08:30", displayTime: "09:00", status: "IN WATER", summary: "3 GROUPS · 5 DIVERS",
+        "slot-11-oclock": {
+          sourceTime: "11 o'clock", displayTime: "11 o'clock", status: "STANDBY", summary: "2 DM · 5 DIVERS",
           groups: [
-            { marker: "P", dm: "Putu Mulade", capacity: "1/3", context: "Fundive · Nusa Penida", divers: [{ name: "Liao Dong Dong", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "N", dm: "-", capacity: "2/3", context: "Fundive · Nusa Penida", divers: [{ name: "KHA ZI HENG", note: "-" }, { name: "Wong Jun Xian", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "P", dm: "-", capacity: "2/3", context: "Fundive · USAT Liberty Wreck", divers: [{ name: "Lee Sze Pei", note: "-" }, { name: "Lim Chye An", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "A", dm: "-", capacity: "0/3", context: "— · Car 2", divers: [{ name: "-", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "—", dm: "-", capacity: "0/3", context: "Coral Garden · Car 3", divers: [{ name: "-", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] }
-          ]
-        },
-        "slot-1100": {
-          sourceTime: "10:30", displayTime: "11:00", status: "STANDBY", summary: "2 DM · 5 DIVERS",
-          groups: [
-            { marker: "P", dm: "Putu Mulade", capacity: "1/3", context: "Fundive · Coral Garden", divers: [{ name: "Liao Dong Dong", note: "-" }, { name: "-", note: "" }, { name: "-", note: "" }] },
+            { marker: "P", dm: "Putu", capacity: "1/3", context: "Fundive · Coral Garden", divers: [{ name: "Liao Dong Dong", note: "-" }, { name: "-", note: "" }, { name: "-", note: "" }] },
             { marker: "N", dm: "-", capacity: "2/3", context: "Courses · Liberty USAT", divers: [{ name: "KHA ZI HENG", note: "-" }, { name: "Wong Jun Xian", note: "-" }, { name: "-", note: "" }] },
             { marker: "P", dm: "-", capacity: "2/3", context: "Fundive · Driver Alit", divers: [{ name: "Lee Sze Pei", note: "" }, { name: "Lim Chye An", note: "" }, { name: "-", note: "" }] },
             { marker: "A", dm: "-", capacity: "0/3", context: "— · Car 2", divers: [{ name: "-", note: "" }, { name: "-", note: "" }, { name: "-", note: "" }] },
@@ -632,8 +619,8 @@
             { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] }
           ]
         },
-        "slot-1400": {
-          sourceTime: "14:00", displayTime: "14:00", status: "STANDBY", summary: "1 DM · 2 DIVERS",
+        "slot-2-oclock": {
+          sourceTime: "2 o'clock", displayTime: "2 o'clock", status: "STANDBY", summary: "1 DM · 2 DIVERS",
           groups: [
             { marker: "A", dm: "Aquaman", capacity: "2/3", context: "Fundive · Drop Off", divers: [{ name: "Chen Mindan", note: "-" }, { name: "Xu Yiran", note: "-" }, { name: "-", note: "" }] },
             { marker: "P", dm: "-", capacity: "2/3", context: "Courses · Liberty USAT", divers: [{ name: "KHA ZI HENG", note: "" }, { name: "Wong Jun Xian", note: "" }, { name: "-", note: "" }] },
@@ -658,7 +645,7 @@
     };
     // ===== END EDITABLE DEFAULT DATA =====
 
-    const STORAGE_KEY = "tulamben-dive-board-v1";
+    const STORAGE_KEY = "tulamben-dive-board-v2";
     const PLAYBACK_STORAGE_KEY = "tulamben-dive-board-playback-v1";
     const board = document.querySelector("#board");
     const navButtons = [...document.querySelectorAll("[data-view]")];
@@ -669,13 +656,13 @@
     const intervalSelect = document.querySelector("#interval-select");
     const customIntervalControl = document.querySelector(".custom-interval-control");
     const customInterval = document.querySelector("#custom-interval");
-    const requiredSessionIds = ["slot-0900", "slot-1100", "slot-1400", "slot-1830"];
+    const requiredSessionIds = ["slot-11-oclock", "slot-2-oclock", "slot-1830"];
     const VIEWS = ["overview", ...requiredSessionIds];
 
     function validateData(value) {
       return Boolean(
         value && value.date && typeof value.date.display === "string"
-        && Array.isArray(value.overview) && value.overview.length === 4
+        && Array.isArray(value.overview) && value.overview.length === 3
         && value.sessions && requiredSessionIds.every(id =>
           value.sessions[id] && Array.isArray(value.sessions[id].groups)
           && value.sessions[id].groups.length === 6
