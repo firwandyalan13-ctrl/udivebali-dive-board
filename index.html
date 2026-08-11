@@ -623,65 +623,564 @@
   <script>
     // ===== EDITABLE DEFAULT DATA: BOARD_DATA =====
     const BOARD_DATA = {
-      date: { display: "11 AUG 2026", weekday: "Tuesday" },
-      safety: "DM RATIO 1:3 · Tank check · Buddy check before entry",
-      overviewSafety: "DM RATIO 1:3 · Buddy check before entry · Max depth 30m · Safety stop 3 min @ 5m",
-      overview: [
-        { id: "slot-0900", time: "09:00", status: "IN WATER", dmGroups: 2, divers: 3, site: "Coral Garden" },
-        { id: "slot-1100", time: "11:00", status: "STANDBY", dmGroups: 2, divers: 3, site: "Dropoff" },
-        { id: "slot-1400", time: "14:00", status: "STANDBY", dmGroups: 2, divers: 2, site: "Liberty Wreck USAT" },
-        { id: "slot-1830", time: "18:30", status: "NIGHT DIVE", dmGroups: 1, divers: 1, site: "Liberty Wreck USAT" }
-      ],
-      sessions: {
-        "slot-0900": {
-          sourceTime: "08:30", displayTime: "09:00", status: "IN WATER", summary: "3 GROUPS · 5 DIVERS",
-          groups: [
-            { marker: "P", dm: "Putu Mulade", capacity: "1/3", context: "Fundive · Nusa Penida", divers: [{ name: "Liao Dong Dong", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "N", dm: "-", capacity: "2/3", context: "Fundive · Nusa Penida", divers: [{ name: "KHA ZI HENG", note: "-" }, { name: "Wong Jun Xian", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "P", dm: "-", capacity: "2/3", context: "Fundive · USAT Liberty Wreck", divers: [{ name: "Lee Sze Pei", note: "-" }, { name: "Lim Chye An", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "A", dm: "-", capacity: "0/3", context: "— · Car 2", divers: [{ name: "-", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "—", dm: "-", capacity: "0/3", context: "Coral Garden · Car 3", divers: [{ name: "-", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] }
+  "date": {
+    "display": "11 AUG 2026",
+    "weekday": "Tuesday"
+  },
+  "safety": "DM RATIO 1:3 · Tank check · Buddy check before entry",
+  "overviewSafety": "DM RATIO 1:3 · Buddy check before entry · Max depth 30m · Safety stop 3 min @ 5m",
+  "overview": [
+    {
+      "id": "slot-0900",
+      "time": "09:00",
+      "status": "IN WATER",
+      "dmGroups": 0,
+      "divers": 0,
+      "site": "Coral Garden"
+    },
+    {
+      "id": "slot-1100",
+      "time": "11:00",
+      "status": "STANDBY",
+      "dmGroups": 0,
+      "divers": 0,
+      "site": "Dropoff"
+    },
+    {
+      "id": "slot-1400",
+      "time": "14:00",
+      "status": "STANDBY",
+      "dmGroups": 0,
+      "divers": 0,
+      "site": "Liberty Wreck USAT"
+    },
+    {
+      "id": "slot-1830",
+      "time": "18:30",
+      "status": "NIGHT DIVE",
+      "dmGroups": 0,
+      "divers": 0,
+      "site": "Liberty Wreck USAT"
+    }
+  ],
+  "sessions": {
+    "slot-0900": {
+      "sourceTime": "08:30",
+      "displayTime": "09:00",
+      "status": "IN WATER",
+      "summary": "0 DM · 0 DIVERS",
+      "groups": [
+        {
+          "marker": "P",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Fundive · Nusa Penida",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
           ]
         },
-        "slot-1100": {
-          sourceTime: "10:30", displayTime: "11:00", status: "STANDBY", summary: "2 DM · 5 DIVERS",
-          groups: [
-            { marker: "P", dm: "Putu Mulade", capacity: "1/3", context: "Fundive · Coral Garden", divers: [{ name: "Liao Dong Dong", note: "-" }, { name: "-", note: "" }, { name: "-", note: "" }] },
-            { marker: "N", dm: "-", capacity: "2/3", context: "Courses · Liberty USAT", divers: [{ name: "KHA ZI HENG", note: "-" }, { name: "Wong Jun Xian", note: "-" }, { name: "-", note: "" }] },
-            { marker: "P", dm: "-", capacity: "2/3", context: "Fundive · Driver Alit", divers: [{ name: "Lee Sze Pei", note: "" }, { name: "Lim Chye An", note: "" }, { name: "-", note: "" }] },
-            { marker: "A", dm: "-", capacity: "0/3", context: "— · Car 2", divers: [{ name: "-", note: "" }, { name: "-", note: "" }, { name: "-", note: "" }] },
-            { marker: "G", dm: "-", capacity: "0/3", context: "Coral Garden · Car 3", divers: [{ name: "-", note: "" }, { name: "-", note: "" }, { name: "-", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] }
+        {
+          "marker": "N",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Fundive · Nusa Penida",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
           ]
         },
-        "slot-1400": {
-          sourceTime: "14:00", displayTime: "14:00", status: "STANDBY", summary: "1 DM · 2 DIVERS",
-          groups: [
-            { marker: "A", dm: "Aquaman", capacity: "2/3", context: "Fundive · Drop Off", divers: [{ name: "Chen Mindan", note: "-" }, { name: "Xu Yiran", note: "-" }, { name: "-", note: "" }] },
-            { marker: "P", dm: "-", capacity: "2/3", context: "Courses · Liberty USAT", divers: [{ name: "KHA ZI HENG", note: "" }, { name: "Wong Jun Xian", note: "" }, { name: "-", note: "" }] },
-            { marker: "K", dm: "-", capacity: "2/3", context: "—", divers: [{ name: "Lee Sze Pei", note: "" }, { name: "Lim Chye An", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] }
+        {
+          "marker": "P",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Fundive · USAT Liberty Wreck",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
           ]
         },
-        "slot-1830": {
-          sourceTime: "18:30", displayTime: "18:30", status: "NIGHT DIVE", summary: "1 DM · 3 DIVERS",
-          groups: [
-            { marker: "N", dm: "-", capacity: "-/3", context: "Liberty Wreck · Car 3", divers: [{ name: "-", note: "-" }, { name: "-", note: "-" }, { name: "-", note: "-" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] },
-            { marker: "?", dm: "unassigned", capacity: "0/3", context: "—", divers: [{ name: "open", note: "" }, { name: "open", note: "" }, { name: "open", note: "" }] }
+        {
+          "marker": "A",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "— · Car 2",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "—",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Coral Garden · Car 3",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
           ]
         }
-      }
-    };
+      ]
+    },
+    "slot-1100": {
+      "sourceTime": "10:30",
+      "displayTime": "11:00",
+      "status": "STANDBY",
+      "summary": "0 DM · 0 DIVERS",
+      "groups": [
+        {
+          "marker": "P",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Fundive · Coral Garden",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "N",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Courses · Liberty USAT",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "P",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Fundive · Driver Alit",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "A",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "— · Car 2",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "G",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Coral Garden · Car 3",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        }
+      ]
+    },
+    "slot-1400": {
+      "sourceTime": "14:00",
+      "displayTime": "14:00",
+      "status": "STANDBY",
+      "summary": "0 DM · 0 DIVERS",
+      "groups": [
+        {
+          "marker": "A",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Fundive · Drop Off",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "P",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Courses · Liberty USAT",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "K",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        }
+      ]
+    },
+    "slot-1830": {
+      "sourceTime": "18:30",
+      "displayTime": "18:30",
+      "status": "NIGHT DIVE",
+      "summary": "0 DM · 0 DIVERS",
+      "groups": [
+        {
+          "marker": "N",
+          "dm": "-",
+          "capacity": "0/3",
+          "context": "Liberty Wreck · Car 3",
+          "divers": [
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            },
+            {
+              "name": "-",
+              "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        }
+      ]
+    }
+  }
+};
     // ===== END EDITABLE DEFAULT DATA =====
 
-    const STORAGE_KEY = "tulamben-dive-board-v1";
+    const STORAGE_KEY = "tulamben-dive-board-v2";
     const PLAYBACK_STORAGE_KEY = "tulamben-dive-board-playback-v1";
     const board = document.querySelector("#board");
     const navButtons = [...document.querySelectorAll("[data-view]")];
