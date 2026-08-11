@@ -1048,7 +1048,9 @@
             return;
           }
           const names = groupGuestNames(group);
-          const usable = names.filter(name => !isPlaceholderName(name));
+          const usable = names
+            .filter(name => !isPlaceholderName(name))
+            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
           const text = usable.join("\n");
           if (!text) {
             showStatus("No guest names to copy", "error");
