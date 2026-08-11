@@ -463,9 +463,8 @@
       flex-direction: column;
       gap: 6px;
     }
-    .group-top { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px; align-items: center; }
-    .group-marker { display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid #c4e3e4; border-radius: 50%; color: var(--ink-original); background: var(--aqua); font: 800 22px/1 var(--original-display); }
-    .group-cell[data-open="true"] .group-marker { color: var(--ink-soft-original); background: var(--aqua-pale); }
+    .group-top { display: block; }
+    .group-marker { display: none; }
     .dm-block .micro-label { display: block; color: var(--ink-soft-original); font: 400 11px/1 var(--original-mono); }
     .dm-name { display: block; margin-top: 6px; overflow-wrap: anywhere; color: var(--ink-original); font: 750 clamp(14px, 1.25vw, 20px)/1.05 var(--original-display); text-transform: none; }
     .group-cell[data-open="true"] .dm-name { color: var(--ink-soft-original); font-style: italic; font-weight: 450; }
@@ -504,8 +503,8 @@
       display: grid;
       place-items: center;
       width: 100%;
-      aspect-ratio: 1;
-      max-height: 92px;
+      aspect-ratio: 3 / 4;
+      max-height: 168px;
       overflow: hidden;
       border: 2px solid #d3e6e7;
       border-radius: 10px;
@@ -513,7 +512,7 @@
       color: var(--ink-soft-original);
       font: 700 18px/1 var(--original-display);
     }
-    .dm-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .dm-photo img { width: 100%; height: 100%; object-fit: contain; object-position: center top; display: block; background: var(--aqua-pale); }
     .dm-select {
       width: 100%;
       min-height: 30px;
@@ -572,7 +571,7 @@
       border-radius: 12px;
       background: #fff;
     }
-    .dm-roster-card .dm-photo { max-height: 160px; }
+    .dm-roster-card .dm-photo { aspect-ratio: 3 / 4; max-height: 280px; }
     .dm-roster-card input[type="text"] {
       width: 100%;
       min-height: 36px;
@@ -636,9 +635,9 @@
       .session-status { min-height: 44px; }
       .group-grid { gap: 8px 10px; padding: 12px 0 6px; }
       .group-cell { padding: 10px; gap: 8px 10px; }
-      .group-top { grid-template-columns: 40px minmax(0, 1fr); gap: 7px; }
-      .group-marker { width: 40px; height: 40px; font-size: 20px; }
+      .group-top { display: block; }
       .dm-name { margin-top: 4px; font-size: clamp(13px, 1.2vw, 18px); }
+      .dm-photo { max-height: 140px; }
       .group-context { font-size: clamp(10px, .9vw, 13px); }
       .diver-list { gap: 3px; }
       .diver-row { min-height: 28px; padding: 0 6px; }
@@ -652,9 +651,9 @@
       .deck-date-card { max-width: 380px; padding: 20px 26px; }
       .schedule-column { gap: 20px; padding: 10px 20px; }
       .group-cell { padding: 10px; grid-template-columns: minmax(110px, .95fr) minmax(120px, 1.15fr); }
-      .group-marker { width: 40px; height: 40px; font-size: 20px; }
-      .group-top { grid-template-columns: 40px minmax(0, 1fr); gap: 7px; }
+      .group-top { display: block; }
       .group-grid { gap: 8px 10px; padding-top: 14px; }
+      .dm-photo { max-height: 150px; }
     }
 
     @media (max-width: 900px) {
@@ -1822,7 +1821,6 @@
           <section class="group-cell" data-open="${group.dm === "unassigned"}" aria-label="Group ${groupIndex + 1}">
             <div class="group-dm-pane">
               <div class="group-top">
-                <span class="group-marker">${editableField(`${sessionPath}.groups.${groupIndex}.marker`, group.marker, `Group ${groupIndex + 1} marker`, { className: "edit-inline" })}</span>
                 <span class="dm-block"><span class="micro-label">DM</span><strong class="dm-name">${escapeHTML(resolveDmName(group))}</strong></span>
               </div>
               ${renderDmPhoto(group)}
@@ -2068,8 +2066,9 @@
           img.onerror = () => reject(new Error("Could not read image"));
           img.src = objectUrl;
         });
-        const maxSize = 320;
-        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+        const maxWidth = 360;
+        const maxHeight = 520;
+        const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
         const width = Math.max(1, Math.round(image.width * scale));
         const height = Math.max(1, Math.round(image.height * scale));
         const canvas = document.createElement("canvas");
