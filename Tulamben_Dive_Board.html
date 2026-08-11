@@ -462,8 +462,9 @@
     .diver-name { overflow-wrap: anywhere; color: var(--ink-original); font: 650 clamp(13px, 1.15vw, 19px)/1.15 var(--original-display); text-transform: none; }
     .group-cell[data-open="true"] .diver-name { color: var(--ink-soft-original); font-style: italic; font-weight: 450; }
     .diver-note { color: var(--ink-soft-original); font: 500 12px/1 var(--original-mono); text-align: right; }
-    .group-copy-row { display: flex; justify-content: flex-end; margin: 0 0 8px; }
-    .copy-names-btn {
+    .group-copy-row { display: flex; justify-content: flex-end; gap: 6px; margin: 0 0 8px; }
+    .copy-names-btn,
+    .paste-names-btn {
       min-height: 28px;
       border: 1.5px solid var(--line-original);
       border-radius: 999px;
@@ -476,9 +477,12 @@
       text-transform: uppercase;
       transition: background .15s ease, border-color .15s ease, color .15s ease;
     }
-    .copy-names-btn:hover { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
-    .copy-names-btn:active { transform: translateY(1px); }
-    .copy-names-btn[data-copied="true"] { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
+    .copy-names-btn:hover,
+    .paste-names-btn:hover { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
+    .copy-names-btn:active,
+    .paste-names-btn:active { transform: translateY(1px); }
+    .copy-names-btn[data-copied="true"],
+    .paste-names-btn[data-pasted="true"] { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
 
     .slide-footer { display: flex; justify-content: space-between; gap: 18px; flex: 0 0 auto; margin-top: 10px; padding-top: 9px; border-top: 3px solid #d3e6e7; color: var(--ink-soft-original); font: 400 clamp(11px, 1vw, 16px)/1.2 var(--original-mono); letter-spacing: .03em; }
     .original-overview .slide-footer { border-top: 0; }
@@ -865,6 +869,7 @@
             </div>
             <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
             <div class="group-copy-row">
+              <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
               <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
             </div>
             <ol class="diver-list">${divers}</ol>
@@ -1018,6 +1023,33 @@
       return (group?.divers || []).slice(0, 3).map(diver => String(diver?.name ?? "").trim());
     }
 
+    function sortGuestNames(names) {
+      return [...names].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+    }
+
+    function parseNameList(text) {
+      return String(text ?? "")
+        .split(/[\n\r,;|]+/)
+        .map(name => name.trim())
+        .filter(name => !isPlaceholderName(name));
+    }
+
+    function applySortedNamesToGroup(groupIndex, rawNames) {
+      const group = state.data.sessions[state.activeView]?.groups?.[groupIndex];
+      if (!group) return 0;
+      const sorted = sortGuestNames(parseNameList(Array.isArray(rawNames) ? rawNames.join("\n") : rawNames)).slice(0, 3);
+      for (let index = 0; index < 3; index += 1) {
+        if (!group.divers[index]) group.divers[index] = { name: "-", note: "-" };
+        group.divers[index].name = sorted[index] || "-";
+      }
+      const capacity = String(group.capacity ?? "");
+      if (/^\d+\s*\/\s*\d+$/.test(capacity)) {
+        const max = capacity.split("/")[1].trim();
+        group.capacity = `${sorted.length}/${max}`;
+      }
+      return sorted.length;
+    }
+
     async function copyText(text) {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
@@ -1035,6 +1067,20 @@
       if (!ok) throw new Error("Copy failed");
     }
 
+    async function readClipboardText() {
+      if (navigator.clipboard?.readText) return navigator.clipboard.readText();
+      throw new Error("Clipboard read unavailable");
+    }
+
+    function flashActionButton(button, key, idleLabel, activeLabel) {
+      button.dataset[key] = "true";
+      button.textContent = activeLabel;
+      setTimeout(() => {
+        button.dataset[key] = "false";
+        button.textContent = idleLabel;
+      }, 1600);
+    }
+
     function bindCopyNameButtons() {
       board.querySelectorAll("[data-copy-group]").forEach(button => {
         button.addEventListener("click", async event => {
@@ -1047,10 +1093,7 @@
             showStatus("Could not find this group", "error");
             return;
           }
-          const names = groupGuestNames(group);
-          const usable = names
-            .filter(name => !isPlaceholderName(name))
-            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+          const usable = sortGuestNames(groupGuestNames(group).filter(name => !isPlaceholderName(name)));
           const text = usable.join("\n");
           if (!text) {
             showStatus("No guest names to copy", "error");
@@ -1058,16 +1101,49 @@
           }
           try {
             await copyText(text);
-            button.dataset.copied = "true";
-            button.textContent = "Copied";
+            flashActionButton(button, "copied", "Copy names", "Copied");
             showStatus(`Copied ${usable.length} guest name${usable.length === 1 ? "" : "s"}`);
-            setTimeout(() => {
-              button.dataset.copied = "false";
-              button.textContent = "Copy names";
-            }, 1600);
           } catch (error) {
             showStatus("Could not copy names", "error");
           }
+        });
+      });
+
+      board.querySelectorAll("[data-paste-group]").forEach(button => {
+        button.addEventListener("click", async event => {
+          event.preventDefault();
+          event.stopPropagation();
+          const groupIndex = Number(button.dataset.pasteGroup);
+          try {
+            const text = await readClipboardText();
+            const count = applySortedNamesToGroup(groupIndex, text);
+            if (!count) {
+              showStatus("No guest names found to paste", "error");
+              return;
+            }
+            saveState();
+            renderApp();
+            showStatus(`Pasted ${count} name${count === 1 ? "" : "s"} into this group`);
+          } catch (error) {
+            showStatus("Could not paste names — allow clipboard access or use Edit + Ctrl/Cmd+V", "error");
+          }
+        });
+      });
+    }
+
+    function bindNamePasteDistribution() {
+      board.querySelectorAll('input[data-path*=".divers."][data-path$=".name"]').forEach(input => {
+        input.addEventListener("paste", event => {
+          const text = event.clipboardData?.getData("text") ?? "";
+          const names = parseNameList(text);
+          if (names.length <= 1) return;
+          const match = input.dataset.path.match(/^sessions\.[^.]+\.groups\.(\d+)\.divers\.\d+\.name$/);
+          if (!match) return;
+          event.preventDefault();
+          const count = applySortedNamesToGroup(Number(match[1]), names);
+          saveState();
+          renderApp();
+          showStatus(`Pasted ${count} name${count === 1 ? "" : "s"} into this group`);
         });
       });
     }
@@ -1083,6 +1159,7 @@
       editToggle.textContent = state.editing ? "Finish editing" : "Edit board";
       bindEditableFields();
       bindCopyNameButtons();
+      bindNamePasteDistribution();
       board.querySelectorAll("[data-jump]").forEach(button => button.addEventListener("click", () => {
         setActiveView(button.dataset.jump);
       }));
