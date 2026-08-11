@@ -168,6 +168,8 @@
     .edit-field:hover { background: rgba(242, 201, 85, .12); }
     .edit-inline { display: inline-block; width: auto; max-width: 100%; }
     .edit-number { width: 3.4em; text-align: left; }
+    .edit-date { min-height: 1.2em; color: inherit; }
+    .edit-weekday { opacity: .85; cursor: default; }
     .date-lockup .edit-field { text-align: right; }
     .is-editing .slot-card { cursor: default; }
     #edit-toggle[aria-pressed="true"] { border-color: var(--signal); color: #071014; background: var(--signal); }
@@ -728,8 +730,72 @@
       })[character]);
     }
 
+    const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const MONTH_INDEX = Object.fromEntries(MONTHS.map((month, index) => [month, index]));
+
+    function parseBoardDate(display) {
+      const match = String(display ?? "").trim().match(/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/);
+      if (!match) return null;
+      const day = Number(match[1]);
+      const month = MONTH_INDEX[match[2].toUpperCase()];
+      const year = Number(match[3]);
+      if (month === undefined) return null;
+      const date = new Date(year, month, day);
+      if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) return null;
+      return date;
+    }
+
+    function formatBoardDate(date) {
+      return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+    }
+
+    function formatWeekday(date) {
+      return date.toLocaleDateString("en-US", { weekday: "long" });
+    }
+
+    function toDateInputValue(display) {
+      const parsed = parseBoardDate(display);
+      if (!parsed) return "";
+      const month = String(parsed.getMonth() + 1).padStart(2, "0");
+      const day = String(parsed.getDate()).padStart(2, "0");
+      return `${parsed.getFullYear()}-${month}-${day}`;
+    }
+
+    function syncDateDerivedFields(displayValue) {
+      const parsed = parseBoardDate(displayValue);
+      if (!parsed) return false;
+      const weekday = formatWeekday(parsed);
+      state.data.date.display = formatBoardDate(parsed);
+      state.data.date.weekday = weekday;
+      board.querySelectorAll('input[data-path="date.display"]').forEach(input => {
+        if (input.dataset.kind === "date") input.value = toDateInputValue(state.data.date.display);
+        else input.value = state.data.date.display;
+      });
+      board.querySelectorAll('input[data-path="date.weekday"]').forEach(input => {
+        input.value = weekday;
+      });
+      board.querySelectorAll("[data-date-display]").forEach(node => {
+        node.textContent = state.data.date.display;
+      });
+      board.querySelectorAll("[data-date-weekday]").forEach(node => {
+        node.textContent = weekday;
+      });
+      return true;
+    }
+
     function editableField(path, value, label, options = {}) {
-      if (!state.editing) return escapeHTML(value);
+      if (!state.editing) {
+        if (path === "date.display") return `<span data-date-display>${escapeHTML(value)}</span>`;
+        if (path === "date.weekday") return `<span data-date-weekday>${escapeHTML(value)}</span>`;
+        return escapeHTML(value);
+      }
+      if (path === "date.display") {
+        const className = options.className ? ` ${options.className}` : "";
+        return `<input class="edit-field edit-date${className}" type="date" data-path="date.display" data-kind="date" aria-label="${escapeHTML(label)}" value="${escapeHTML(toDateInputValue(value))}">`;
+      }
+      if (path === "date.weekday") {
+        return `<input class="edit-field edit-weekday" type="text" data-path="date.weekday" data-kind="text" readonly tabindex="-1" aria-label="${escapeHTML(label)} (auto from date)" value="${escapeHTML(value)}">`;
+      }
       const type = options.type || "text";
       const inputMode = type === "number" ? " inputmode=\"numeric\"" : "";
       const className = options.className ? ` ${options.className}` : "";
@@ -899,8 +965,26 @@
 
     function bindEditableFields() {
       board.querySelectorAll("input[data-path]").forEach(input => input.addEventListener("input", () => {
-        const value = input.dataset.kind === "number" ? Number(input.value) : input.value;
-        setAtPath(state.data, input.dataset.path, value);
+        const path = input.dataset.path;
+        let value;
+        if (input.dataset.kind === "number") value = Number(input.value);
+        else if (input.dataset.kind === "date") {
+          if (!input.value) return;
+          const parsed = new Date(`${input.value}T00:00:00`);
+          if (Number.isNaN(parsed.getTime())) return;
+          value = formatBoardDate(parsed);
+        } else value = input.value;
+
+        setAtPath(state.data, path, value);
+
+        board.querySelectorAll(`input[data-path="${CSS.escape(path)}"]`).forEach(peer => {
+          if (peer === input) return;
+          if (peer.dataset.kind === "date") peer.value = toDateInputValue(String(value));
+          else if (String(peer.value) !== String(value)) peer.value = value;
+        });
+
+        if (path === "date.display") syncDateDerivedFields(String(value));
+
         saveState();
       }));
     }
