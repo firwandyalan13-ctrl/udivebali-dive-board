@@ -868,10 +868,10 @@
               <span class="capacity">${editableField(`${sessionPath}.groups.${groupIndex}.capacity`, group.capacity, `Group ${groupIndex + 1} capacity`, { className: "edit-inline" })}</span>
             </div>
             <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
-            <div class="group-copy-row">
+            ${state.editing ? `<div class="group-copy-row">
               <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
               <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
-            </div>
+            </div>` : ""}
             <ol class="diver-list">${divers}</ol>
           </section>`;
       }).join("");
