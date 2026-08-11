@@ -462,6 +462,23 @@
     .diver-name { overflow-wrap: anywhere; color: var(--ink-original); font: 650 clamp(13px, 1.15vw, 19px)/1.15 var(--original-display); text-transform: none; }
     .group-cell[data-open="true"] .diver-name { color: var(--ink-soft-original); font-style: italic; font-weight: 450; }
     .diver-note { color: var(--ink-soft-original); font: 500 12px/1 var(--original-mono); text-align: right; }
+    .group-copy-row { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+    .copy-names-btn {
+      min-height: 28px;
+      border: 1.5px solid var(--line-original);
+      border-radius: 999px;
+      padding: 0 12px;
+      color: var(--aqua-dark);
+      background: var(--aqua-pale);
+      cursor: pointer;
+      font: 700 11px/1 var(--original-mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: background .15s ease, border-color .15s ease, color .15s ease;
+    }
+    .copy-names-btn:hover { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
+    .copy-names-btn:active { transform: translateY(1px); }
+    .copy-names-btn[data-copied="true"] { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
 
     .slide-footer { display: flex; justify-content: space-between; gap: 18px; flex: 0 0 auto; margin-top: 10px; padding-top: 9px; border-top: 3px solid #d3e6e7; color: var(--ink-soft-original); font: 400 clamp(11px, 1vw, 16px)/1.2 var(--original-mono); letter-spacing: .03em; }
     .original-overview .slide-footer { border-top: 0; }
@@ -847,6 +864,9 @@
               <span class="capacity">${editableField(`${sessionPath}.groups.${groupIndex}.capacity`, group.capacity, `Group ${groupIndex + 1} capacity`, { className: "edit-inline" })}</span>
             </div>
             <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
+            <div class="group-copy-row">
+              <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
+            </div>
             <ol class="diver-list">${divers}</ol>
           </section>`;
       }).join("");
@@ -989,6 +1009,67 @@
       }));
     }
 
+    function isPlaceholderName(name) {
+      const normalized = String(name ?? "").trim().toLowerCase();
+      return !normalized || normalized === "-" || normalized === "—" || normalized === "open";
+    }
+
+    function groupGuestNames(group) {
+      return (group?.divers || []).slice(0, 3).map(diver => String(diver?.name ?? "").trim());
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.append(area);
+      area.select();
+      const ok = document.execCommand("copy");
+      area.remove();
+      if (!ok) throw new Error("Copy failed");
+    }
+
+    function bindCopyNameButtons() {
+      board.querySelectorAll("[data-copy-group]").forEach(button => {
+        button.addEventListener("click", async event => {
+          event.preventDefault();
+          event.stopPropagation();
+          const groupIndex = Number(button.dataset.copyGroup);
+          const session = state.data.sessions[state.activeView];
+          const group = session?.groups?.[groupIndex];
+          if (!group) {
+            showStatus("Could not find this group", "error");
+            return;
+          }
+          const names = groupGuestNames(group);
+          const usable = names.filter(name => !isPlaceholderName(name));
+          const text = usable.join("\n");
+          if (!text) {
+            showStatus("No guest names to copy", "error");
+            return;
+          }
+          try {
+            await copyText(text);
+            button.dataset.copied = "true";
+            button.textContent = "Copied";
+            showStatus(`Copied ${usable.length} guest name${usable.length === 1 ? "" : "s"}`);
+            setTimeout(() => {
+              button.dataset.copied = "false";
+              button.textContent = "Copy names";
+            }, 1600);
+          } catch (error) {
+            showStatus("Could not copy names", "error");
+          }
+        });
+      });
+    }
+
     function renderApp() {
       board.innerHTML = state.activeView === "overview"
         ? renderOverview(state.data)
@@ -999,6 +1080,7 @@
       editToggle.setAttribute("aria-pressed", String(state.editing));
       editToggle.textContent = state.editing ? "Finish editing" : "Edit board";
       bindEditableFields();
+      bindCopyNameButtons();
       board.querySelectorAll("[data-jump]").forEach(button => button.addEventListener("click", () => {
         setActiveView(button.dataset.jump);
       }));
