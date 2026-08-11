@@ -471,6 +471,16 @@
       gap: 4px;
       overflow: hidden;
     }
+    .guest-meta {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+      align-items: center;
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+    .guest-meta .group-context { min-width: 0; }
+    .guest-meta .capacity { justify-self: end; white-space: nowrap; }
     .group-top { display: block; flex: 0 0 auto; }
     .group-marker { display: none; }
     .dm-block .micro-label { display: block; color: var(--ink-soft-original); font: 400 10px/1 var(--original-mono); }
@@ -1845,14 +1855,16 @@
               </div>
               ${renderDmPhoto(group)}
               ${state.editing ? renderDmSelect(groupIndex, group) : ""}
-              <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
-              <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
               ${state.editing ? `<div class="group-copy-row">
                 <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
                 <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
               </div>` : ""}
             </div>
             <div class="group-guest-pane">
+              <div class="guest-meta">
+                <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
+                <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
+              </div>
               <ol class="diver-list">${divers}</ol>
             </div>
           </section>`;
