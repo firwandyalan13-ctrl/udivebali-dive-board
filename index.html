@@ -828,8 +828,8 @@
         <section class="schedule-column" data-live="${item.status === "IN WATER"}" ${state.editing ? "" : `data-jump="${escapeHTML(item.id)}" role="button" tabindex="0"`} aria-label="${state.editing ? "Edit" : "Open"} ${escapeHTML(item.time)} ${escapeHTML(item.status)} board">
           <h2 class="schedule-time">${editableField(`overview.${index}.time`, item.time, `Time slot ${index + 1}`, { className: "edit-inline" })}</h2>
           <p class="schedule-status">${editableField(`overview.${index}.status`, item.status, `Status for ${item.time}`)}</p>
-          <div class="schedule-metric"><span>DM GROUPS</span><strong>${editableField(`overview.${index}.dmGroups`, item.dmGroups, `DM group count for ${item.time}`, { type: "number", className: "edit-number" })}</strong></div>
-          <div class="schedule-metric"><span>DIVERS</span><strong>${editableField(`overview.${index}.divers`, item.divers, `Diver count for ${item.time}`, { type: "number", className: "edit-number" })}</strong></div>
+          <div class="schedule-metric"><span>DM GROUPS</span><strong data-auto-metric="overview.${index}.dmGroups">${escapeHTML(item.dmGroups)}</strong></div>
+          <div class="schedule-metric"><span>DIVERS</span><strong data-auto-metric="overview.${index}.divers">${escapeHTML(item.divers)}</strong></div>
           <div class="schedule-site"><span>SITE</span><strong>${editableField(`overview.${index}.site`, item.site, `Dive site for ${item.time}`)}</strong></div>
         </section>`).join("");
 
@@ -865,7 +865,7 @@
             <div class="group-top">
               <span class="group-marker">${editableField(`${sessionPath}.groups.${groupIndex}.marker`, group.marker, `Group ${groupIndex + 1} marker`, { className: "edit-inline" })}</span>
               <span class="dm-block"><span class="micro-label">DM</span><strong class="dm-name">${editableField(`${sessionPath}.groups.${groupIndex}.dm`, group.dm, `Group ${groupIndex + 1} dive master`)}</strong></span>
-              <span class="capacity">${editableField(`${sessionPath}.groups.${groupIndex}.capacity`, group.capacity, `Group ${groupIndex + 1} capacity`, { className: "edit-inline" })}</span>
+              <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
             </div>
             <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
             ${state.editing ? `<div class="group-copy-row">
@@ -882,7 +882,7 @@
             <h1 class="session-time">${editableField(`${sessionPath}.sourceTime`, session.sourceTime, "Session time", { className: "edit-inline" })}</h1>
             <div class="session-summary-line">
               <span class="session-status">${editableField(`${sessionPath}.status`, session.status, "Session status")}</span>
-              <span class="session-summary">${editableField(`${sessionPath}.summary`, session.summary, "Session summary")}</span>
+              <span class="session-summary" data-auto-summary>${escapeHTML(session.summary)}</span>
             </div>
             <div class="session-date">${editableField("date.display", data.date.display, "Board date")}</div>
           </header>
@@ -1009,6 +1009,9 @@
         });
 
         if (path === "date.display") syncDateDerivedFields(String(value));
+        if (/\.groups\.\d+\.dm$/.test(path) || /\.divers\.\d+\.name$/.test(path)) {
+          updateLiveDerivedDisplays();
+        }
 
         saveState();
       }));
@@ -1017,6 +1020,71 @@
     function isPlaceholderName(name) {
       const normalized = String(name ?? "").trim().toLowerCase();
       return !normalized || normalized === "-" || normalized === "—" || normalized === "open";
+    }
+
+    function isPlaceholderDm(dm) {
+      const normalized = String(dm ?? "").trim().toLowerCase();
+      return !normalized || normalized === "-" || normalized === "—" || normalized === "unassigned" || normalized === "?";
+    }
+
+    function countGroupDivers(group) {
+      return (group?.divers || []).filter(diver => !isPlaceholderName(diver?.name)).length;
+    }
+
+    function capacityMax(capacity, fallback = 3) {
+      const match = String(capacity ?? "").trim().match(/^(?:\d+|-)\s*\/\s*(\d+)$/);
+      return match ? Number(match[1]) : fallback;
+    }
+
+    function computeSessionTotals(session) {
+      let divers = 0;
+      let dmGroups = 0;
+      for (const group of session?.groups || []) {
+        divers += countGroupDivers(group);
+        if (!isPlaceholderDm(group.dm)) dmGroups += 1;
+      }
+      return { dmGroups, divers };
+    }
+
+    function formatSessionSummary(dmGroups, divers) {
+      return `${dmGroups} DM · ${divers} DIVERS`;
+    }
+
+    function syncDerivedCounts(data = state.data) {
+      if (!data?.overview || !data?.sessions) return data;
+      for (const item of data.overview) {
+        const session = data.sessions[item.id];
+        if (!session) continue;
+        for (const group of session.groups || []) {
+          group.capacity = `${countGroupDivers(group)}/${capacityMax(group.capacity)}`;
+        }
+        const totals = computeSessionTotals(session);
+        item.dmGroups = totals.dmGroups;
+        item.divers = totals.divers;
+        session.summary = formatSessionSummary(totals.dmGroups, totals.divers);
+      }
+      return data;
+    }
+
+    function updateLiveDerivedDisplays() {
+      syncDerivedCounts();
+      if (state.activeView === "overview") {
+        state.data.overview.forEach((item, index) => {
+          const dmNode = board.querySelector(`[data-auto-metric="overview.${index}.dmGroups"]`);
+          const diversNode = board.querySelector(`[data-auto-metric="overview.${index}.divers"]`);
+          if (dmNode) dmNode.textContent = String(item.dmGroups);
+          if (diversNode) diversNode.textContent = String(item.divers);
+        });
+        return;
+      }
+      const session = state.data.sessions[state.activeView];
+      if (!session) return;
+      const summaryNode = board.querySelector("[data-auto-summary]");
+      if (summaryNode) summaryNode.textContent = session.summary;
+      session.groups.forEach((group, groupIndex) => {
+        const capacityNode = board.querySelector(`[data-auto-capacity="${groupIndex}"]`);
+        if (capacityNode) capacityNode.textContent = group.capacity;
+      });
     }
 
     function groupGuestNames(group) {
@@ -1042,11 +1110,7 @@
         if (!group.divers[index]) group.divers[index] = { name: "-", note: "-" };
         group.divers[index].name = sorted[index] || "-";
       }
-      const capacity = String(group.capacity ?? "");
-      if (/^\d+\s*\/\s*\d+$/.test(capacity)) {
-        const max = capacity.split("/")[1].trim();
-        group.capacity = `${sorted.length}/${max}`;
-      }
+      syncDerivedCounts();
       return sorted.length;
     }
 
@@ -1149,6 +1213,7 @@
     }
 
     function renderApp() {
+      syncDerivedCounts();
       board.innerHTML = state.activeView === "overview"
         ? renderOverview(state.data)
         : renderSession(state.data.sessions[state.activeView], state.data);
@@ -1299,6 +1364,7 @@
       setActiveView(VIEWS[(current + direction + VIEWS.length) % VIEWS.length]);
     });
 
+    syncDerivedCounts();
     renderApp();
   </script>
 </body>
