@@ -500,6 +500,112 @@
     .copy-names-btn[data-copied="true"],
     .paste-names-btn[data-pasted="true"] { border-color: var(--aqua); color: var(--ink-original); background: var(--aqua); }
 
+    .dm-photo {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 1;
+      max-height: 92px;
+      overflow: hidden;
+      border: 2px solid #d3e6e7;
+      border-radius: 10px;
+      background: var(--aqua-pale);
+      color: var(--ink-soft-original);
+      font: 700 18px/1 var(--original-display);
+    }
+    .dm-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .dm-select {
+      width: 100%;
+      min-height: 30px;
+      border: 1.5px solid var(--line-original);
+      border-radius: 7px;
+      padding: 0 8px;
+      color: var(--ink-original);
+      background: #fff;
+      font: 650 clamp(12px, 1.05vw, 15px)/1 var(--original-display);
+    }
+    .dm-roster-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(7, 24, 30, .55);
+    }
+    .dm-roster-modal[hidden] { display: none; }
+    .dm-roster-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      width: min(920px, 100%);
+      max-height: min(86vh, 900px);
+      overflow: hidden;
+      border: 2px solid var(--line-original);
+      border-radius: 14px;
+      background: #f7f4ec;
+      box-shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+    .dm-roster-header, .dm-roster-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 2px solid #d3e6e7;
+    }
+    .dm-roster-footer { border-bottom: 0; border-top: 2px solid #d3e6e7; }
+    .dm-roster-header h2 { margin: 0; color: var(--ink-original); font: 800 20px/1 var(--original-display); letter-spacing: .04em; }
+    .dm-roster-header p { margin: 6px 0 0; color: var(--ink-soft-original); font: 500 13px/1.3 var(--original-mono); }
+    .dm-roster-list {
+      display: grid;
+      gap: 12px;
+      overflow: auto;
+      padding: 16px 18px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      align-content: start;
+    }
+    .dm-roster-card {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 2px solid var(--line-original);
+      border-radius: 12px;
+      background: #fff;
+    }
+    .dm-roster-card .dm-photo { max-height: 160px; }
+    .dm-roster-card input[type="text"] {
+      width: 100%;
+      min-height: 36px;
+      border: 1.5px solid var(--line-original);
+      border-radius: 8px;
+      padding: 0 10px;
+      font: 650 14px/1 var(--original-display);
+      color: var(--ink-original);
+      background: #faf8f2;
+    }
+    .dm-roster-card-actions, .dm-roster-footer-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .dm-roster-card-actions button,
+    .dm-roster-footer-actions button,
+    .dm-roster-header button,
+    #dm-roster-toggle {
+      min-height: 34px;
+      border: 1px solid rgba(18, 59, 75, .2);
+      border-radius: 4px;
+      padding: 0 11px;
+      color: var(--ink-original);
+      background: #faf8f2;
+      cursor: pointer;
+      font: 750 10px/1 var(--original-display);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .dm-roster-card-actions button:hover,
+    .dm-roster-footer-actions button:hover,
+    .dm-roster-header button:hover,
+    #dm-roster-toggle:hover { border-color: var(--aqua-dark); background: #fff; }
+    .dm-roster-card-actions .danger { color: var(--red); border-color: rgba(217,75,73,.35); }
+    .dm-roster-empty { grid-column: 1 / -1; color: var(--ink-soft-original); font: 500 14px/1.4 var(--original-mono); }
+
     .slide-footer { display: flex; justify-content: space-between; gap: 18px; flex: 0 0 auto; margin-top: 10px; padding-top: 9px; border-top: 3px solid #d3e6e7; color: var(--ink-soft-original); font: 400 clamp(11px, 1vw, 16px)/1.2 var(--original-mono); letter-spacing: .03em; }
     .original-overview .slide-footer { border-top: 0; }
     .slide-footer strong { color: var(--ink-soft-original); font-weight: 400; white-space: nowrap; }
@@ -628,6 +734,7 @@
         <span>sec</span>
       </label>
     </div>
+    <button id="dm-roster-toggle" type="button">DM roster</button>
     <button id="edit-toggle" type="button" aria-pressed="false">Edit board</button>
     <button id="export-button" type="button">Export</button>
     <label class="import-button">Import<input id="import-input" type="file" accept="application/json" hidden></label>
@@ -637,6 +744,28 @@
   <main class="slide-stage">
     <section id="board" class="slide-canvas" aria-live="polite"></section>
   </main>
+  <div id="dm-roster-modal" class="dm-roster-modal" hidden>
+    <section class="dm-roster-panel" role="dialog" aria-modal="true" aria-labelledby="dm-roster-title">
+      <header class="dm-roster-header">
+        <div>
+          <h2 id="dm-roster-title">DM roster</h2>
+          <p>Upload photos and label each dive master. Then select them on the board.</p>
+        </div>
+        <button id="dm-roster-close" type="button">Close</button>
+      </header>
+      <div id="dm-roster-list" class="dm-roster-list"></div>
+      <footer class="dm-roster-footer">
+        <div class="dm-roster-footer-actions">
+          <label class="import-button" style="display:inline-grid;place-items:center;min-height:34px;padding:0 11px;border:1px solid rgba(18,59,75,.2);border-radius:4px;background:#faf8f2;cursor:pointer;font:750 10px/1 var(--original-display);letter-spacing:.06em;text-transform:uppercase;">
+            Upload photo
+            <input id="dm-roster-upload" type="file" accept="image/*" multiple hidden>
+          </label>
+          <button id="dm-roster-add-blank" type="button">Add blank</button>
+        </div>
+        <button id="dm-roster-done" type="button">Done</button>
+      </footer>
+    </section>
+  </div>
   <script>
     // ===== EDITABLE DEFAULT DATA: BOARD_DATA =====
     const BOARD_DATA = {
@@ -705,7 +834,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "N",
@@ -725,7 +855,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "P",
@@ -745,7 +876,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "A",
@@ -765,7 +897,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "—",
@@ -785,7 +918,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -805,7 +939,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -825,7 +960,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -845,7 +981,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -865,7 +1002,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         }
       ]
     },
@@ -893,7 +1031,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "N",
@@ -913,7 +1052,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "P",
@@ -933,7 +1073,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "A",
@@ -953,7 +1094,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "G",
@@ -973,7 +1115,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -993,7 +1136,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1013,7 +1157,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1033,7 +1178,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1053,7 +1199,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         }
       ]
     },
@@ -1081,7 +1228,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "P",
@@ -1101,7 +1249,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "K",
@@ -1121,7 +1270,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1141,7 +1291,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1161,7 +1312,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1181,7 +1333,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1201,7 +1354,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1221,7 +1375,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1241,7 +1396,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         }
       ]
     },
@@ -1269,7 +1425,8 @@
               "name": "-",
               "note": "-"
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1289,7 +1446,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1309,7 +1467,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1329,7 +1488,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1349,7 +1509,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1369,7 +1530,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1389,7 +1551,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1409,7 +1572,8 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         },
         {
           "marker": "?",
@@ -1429,15 +1593,17 @@
               "name": "open",
               "note": ""
             }
-          ]
+          ],
+          "dmId": ""
         }
       ]
     }
-  }
+  },
+  "dmRoster": []
 };
     // ===== END EDITABLE DEFAULT DATA =====
 
-    const STORAGE_KEY = "tulamben-dive-board-v3";
+    const STORAGE_KEY = "tulamben-dive-board-v4";
     const PLAYBACK_STORAGE_KEY = "tulamben-dive-board-playback-v1";
     const board = document.querySelector("#board");
     const navButtons = [...document.querySelectorAll("[data-view]")];
@@ -1460,6 +1626,21 @@
           && value.sessions[id].groups.length === 9
         )
       );
+    }
+
+    function ensureDmRoster(data) {
+      if (!Array.isArray(data.dmRoster)) data.dmRoster = [];
+      data.dmRoster = data.dmRoster.map((item, index) => ({
+        id: item?.id || `dm-${index + 1}-${Math.random().toString(36).slice(2, 7)}`,
+        name: String(item?.name ?? "").trim(),
+        photo: typeof item?.photo === "string" ? item.photo : ""
+      }));
+      for (const id of requiredSessionIds) {
+        for (const group of data.sessions?.[id]?.groups || []) {
+          if (typeof group.dmId !== "string") group.dmId = "";
+        }
+      }
+      return data;
     }
 
     function normalizeGroupCount(data) {
@@ -1486,11 +1667,11 @@
     function loadData() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (!saved) return structuredClone(BOARD_DATA);
-        const parsed = normalizeGroupCount(JSON.parse(saved));
-        return validateData(parsed) ? parsed : structuredClone(BOARD_DATA);
+        if (!saved) return ensureDmRoster(structuredClone(BOARD_DATA));
+        const parsed = ensureDmRoster(normalizeGroupCount(JSON.parse(saved)));
+        return validateData(parsed) ? parsed : ensureDmRoster(structuredClone(BOARD_DATA));
       } catch (error) {
-        return structuredClone(BOARD_DATA);
+        return ensureDmRoster(structuredClone(BOARD_DATA));
       }
     }
 
@@ -1642,8 +1823,10 @@
             <div class="group-dm-pane">
               <div class="group-top">
                 <span class="group-marker">${editableField(`${sessionPath}.groups.${groupIndex}.marker`, group.marker, `Group ${groupIndex + 1} marker`, { className: "edit-inline" })}</span>
-                <span class="dm-block"><span class="micro-label">DM</span><strong class="dm-name">${editableField(`${sessionPath}.groups.${groupIndex}.dm`, group.dm, `Group ${groupIndex + 1} dive master`)}</strong></span>
+                <span class="dm-block"><span class="micro-label">DM</span><strong class="dm-name">${escapeHTML(resolveDmName(group))}</strong></span>
               </div>
+              ${renderDmPhoto(group)}
+              ${state.editing ? renderDmSelect(groupIndex, group) : ""}
               <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
               <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
               ${state.editing ? `<div class="group-copy-row">
@@ -1796,6 +1979,202 @@
 
         saveState();
       }));
+    }
+
+    function createDmId() {
+      return `dm-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    function getDmRoster() {
+      if (!Array.isArray(state.data.dmRoster)) state.data.dmRoster = [];
+      return state.data.dmRoster;
+    }
+
+    function findDmById(id) {
+      if (!id) return null;
+      return getDmRoster().find(item => item.id === id) || null;
+    }
+
+    function findDmByName(name) {
+      const normalized = String(name ?? "").trim().toLowerCase();
+      if (!normalized || normalized === "-" || normalized === "—" || normalized === "unassigned" || normalized === "?") return null;
+      return getDmRoster().find(item => String(item.name || "").trim().toLowerCase() === normalized) || null;
+    }
+
+    function resolveDmRecord(group) {
+      return findDmById(group?.dmId) || findDmByName(group?.dm);
+    }
+
+    function resolveDmName(group) {
+      const record = resolveDmRecord(group);
+      if (record?.name) return record.name;
+      const raw = String(group?.dm ?? "").trim();
+      return raw || "-";
+    }
+
+    function dmInitials(name) {
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return "?";
+      return parts.slice(0, 2).map(part => part[0]?.toUpperCase() || "").join("") || "?";
+    }
+
+    function renderDmPhoto(group) {
+      const record = resolveDmRecord(group);
+      const name = resolveDmName(group);
+      if (record?.photo) {
+        return `<div class="dm-photo" aria-hidden="true"><img src="${escapeHTML(record.photo)}" alt=""></div>`;
+      }
+      const open = !name || ["-", "—", "unassigned", "?"].includes(name.toLowerCase());
+      return `<div class="dm-photo" aria-hidden="true">${open ? "?" : escapeHTML(dmInitials(name))}</div>`;
+    }
+
+    function renderDmSelect(groupIndex, group) {
+      const roster = getDmRoster();
+      const selectedId = group.dmId || findDmByName(group.dm)?.id || "";
+      const options = [
+        `<option value="">Unassigned</option>`,
+        ...roster.map(item => {
+          const label = item.name?.trim() || "Untitled DM";
+          const selected = item.id === selectedId ? " selected" : "";
+          return `<option value="${escapeHTML(item.id)}"${selected}>${escapeHTML(label)}</option>`;
+        })
+      ].join("");
+      return `<select class="dm-select" data-dm-select="${groupIndex}" aria-label="Select DM for group ${groupIndex + 1}">${options}</select>`;
+    }
+
+    function syncGroupDmLabelsFromRoster() {
+      const roster = getDmRoster();
+      const byId = Object.fromEntries(roster.map(item => [item.id, item]));
+      for (const id of requiredSessionIds) {
+        for (const group of state.data.sessions[id].groups) {
+          if (group.dmId && byId[group.dmId]) {
+            group.dm = byId[group.dmId].name?.trim() || "unassigned";
+            if (!group.dm) group.dm = "unassigned";
+          } else if (group.dmId && !byId[group.dmId]) {
+            group.dmId = "";
+            group.dm = "unassigned";
+          }
+        }
+      }
+    }
+
+    async function fileToDmPhoto(file) {
+      if (!file || !file.type.startsWith("image/")) throw new Error("Not an image");
+      const objectUrl = URL.createObjectURL(file);
+      try {
+        const image = await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error("Could not read image"));
+          img.src = objectUrl;
+        });
+        const maxSize = 320;
+        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#f4f7f7";
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(image, 0, 0, width, height);
+        return canvas.toDataURL("image/jpeg", 0.74);
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    }
+
+    function renderDmRosterPanel() {
+      const list = document.querySelector("#dm-roster-list");
+      const roster = getDmRoster();
+      if (!roster.length) {
+        list.innerHTML = `<p class="dm-roster-empty">No dive masters yet. Upload a photo, then type the name under it.</p>`;
+        return;
+      }
+      list.innerHTML = roster.map((item, index) => `
+        <article class="dm-roster-card" data-dm-id="${escapeHTML(item.id)}">
+          <div class="dm-photo">${item.photo ? `<img src="${escapeHTML(item.photo)}" alt="">` : escapeHTML(dmInitials(item.name))}</div>
+          <input type="text" data-dm-name="${escapeHTML(item.id)}" aria-label="DM name ${index + 1}" placeholder="Type DM name" value="${escapeHTML(item.name || "")}">
+          <div class="dm-roster-card-actions">
+            <label class="import-button" style="display:inline-grid;place-items:center;min-height:34px;padding:0 11px;border:1px solid rgba(18,59,75,.2);border-radius:4px;background:#faf8f2;cursor:pointer;font:750 10px/1 var(--original-display);letter-spacing:.06em;text-transform:uppercase;">
+              Replace photo
+              <input type="file" accept="image/*" data-dm-replace="${escapeHTML(item.id)}" hidden>
+            </label>
+            <button type="button" class="danger" data-dm-remove="${escapeHTML(item.id)}">Remove</button>
+          </div>
+        </article>`).join("");
+
+      list.querySelectorAll("[data-dm-name]").forEach(input => {
+        input.addEventListener("input", () => {
+          const record = findDmById(input.dataset.dmName);
+          if (!record) return;
+          record.name = input.value;
+          syncGroupDmLabelsFromRoster();
+          saveState();
+        });
+      });
+      list.querySelectorAll("[data-dm-remove]").forEach(button => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.dmRemove;
+          state.data.dmRoster = getDmRoster().filter(item => item.id !== id);
+          syncGroupDmLabelsFromRoster();
+          saveState();
+          renderDmRosterPanel();
+          if (state.activeView !== "overview") renderApp();
+        });
+      });
+      list.querySelectorAll("[data-dm-replace]").forEach(input => {
+        input.addEventListener("change", async () => {
+          const file = input.files?.[0];
+          input.value = "";
+          if (!file) return;
+          try {
+            const record = findDmById(input.dataset.dmReplace);
+            if (!record) return;
+            record.photo = await fileToDmPhoto(file);
+            saveState();
+            renderDmRosterPanel();
+            if (state.activeView !== "overview") renderApp();
+            showStatus("DM photo updated");
+          } catch (error) {
+            showStatus("Could not update photo", "error");
+          }
+        });
+      });
+    }
+
+    function openDmRoster() {
+      document.querySelector("#dm-roster-modal").hidden = false;
+      renderDmRosterPanel();
+    }
+
+    function closeDmRoster() {
+      document.querySelector("#dm-roster-modal").hidden = true;
+      syncGroupDmLabelsFromRoster();
+      saveState();
+      renderApp();
+    }
+
+    function bindDmSelects() {
+      board.querySelectorAll("[data-dm-select]").forEach(select => {
+        select.addEventListener("change", () => {
+          const groupIndex = Number(select.dataset.dmSelect);
+          const group = state.data.sessions[state.activeView]?.groups?.[groupIndex];
+          if (!group) return;
+          const record = findDmById(select.value);
+          if (!record) {
+            group.dmId = "";
+            group.dm = "unassigned";
+          } else {
+            group.dmId = record.id;
+            group.dm = record.name?.trim() || "unassigned";
+          }
+          updateLiveDerivedDisplays();
+          saveState();
+          renderApp();
+        });
+      });
     }
 
     function isPlaceholderName(name) {
@@ -2006,6 +2385,7 @@
       bindEditableFields();
       bindCopyNameButtons();
       bindNamePasteDistribution();
+      bindDmSelects();
       board.querySelectorAll("[data-jump]").forEach(button => button.addEventListener("click", () => {
         setActiveView(button.dataset.jump);
       }));
@@ -2039,7 +2419,7 @@
       try {
         const candidate = JSON.parse(await file.text());
         if (!validateData(candidate)) throw new Error("Invalid board structure");
-        state.data = candidate;
+        state.data = ensureDmRoster(normalizeGroupCount(candidate));
         saveState();
         renderApp();
         showStatus("Board data imported");
@@ -2050,7 +2430,7 @@
 
     function resetData() {
       if (!confirm("Restore the original board data? Saved edits will be removed.")) return;
-      state.data = structuredClone(BOARD_DATA);
+      state.data = ensureDmRoster(structuredClone(BOARD_DATA));
       saveState();
       renderApp();
       showStatus("Original board restored");
@@ -2064,7 +2444,36 @@
       state.editing = !state.editing;
       if (state.editing) stopAutoplay("Autoplay paused for editing");
       renderApp();
-      if (state.editing) board.querySelector("input")?.focus();
+      if (state.editing) board.querySelector("input, select")?.focus();
+    });
+
+    document.querySelector("#dm-roster-toggle").addEventListener("click", openDmRoster);
+    document.querySelector("#dm-roster-close").addEventListener("click", closeDmRoster);
+    document.querySelector("#dm-roster-done").addEventListener("click", closeDmRoster);
+    document.querySelector("#dm-roster-modal").addEventListener("click", event => {
+      if (event.target.id === "dm-roster-modal") closeDmRoster();
+    });
+    document.querySelector("#dm-roster-add-blank").addEventListener("click", () => {
+      getDmRoster().push({ id: createDmId(), name: "", photo: "" });
+      saveState();
+      renderDmRosterPanel();
+    });
+    document.querySelector("#dm-roster-upload").addEventListener("change", async event => {
+      const files = [...(event.target.files || [])];
+      event.target.value = "";
+      if (!files.length) return;
+      try {
+        for (const file of files) {
+          const photo = await fileToDmPhoto(file);
+          const guessed = file.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim();
+          getDmRoster().push({ id: createDmId(), name: guessed, photo });
+        }
+        saveState();
+        renderDmRosterPanel();
+        showStatus(`Added ${files.length} DM photo${files.length === 1 ? "" : "s"}`);
+      } catch (error) {
+        showStatus("Could not upload DM photo", "error");
+      }
     });
     document.querySelector("#export-button").addEventListener("click", exportData);
     document.querySelector("#import-input").addEventListener("change", event => {
