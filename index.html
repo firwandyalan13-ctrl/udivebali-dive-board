@@ -435,34 +435,50 @@
     .session-summary { overflow-wrap: anywhere; }
     .session-date { justify-self: end; color: var(--ink-soft-original); font: 750 clamp(19px, 2vw, 31px)/1 var(--original-display); }
 
-    .group-grid { display: grid; flex: 1 1 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px 24px; min-height: 0; padding: 28px 0 10px; }
+    .group-grid { display: grid; flex: 1 1 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px 14px; min-height: 0; padding: 18px 0 8px; }
     .group-cell {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(118px, .92fr) minmax(132px, 1.18fr);
+      gap: 10px 12px;
       min-width: 0;
       min-height: 0;
-      flex-direction: column;
-      padding: 20px 22px 13px;
+      align-items: stretch;
+      padding: 12px 12px 10px;
       border: 2px solid var(--line-original);
       border-radius: 11px;
       background: rgba(255, 255, 255, .95);
       box-shadow: 0 6px 8px rgba(39, 62, 64, .22);
     }
-    .group-top { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 14px; align-items: center; }
-    .group-marker { display: grid; place-items: center; width: 62px; height: 62px; border: 2px solid #c4e3e4; border-radius: 50%; color: var(--ink-original); background: var(--aqua); font: 800 32px/1 var(--original-display); }
+    .group-dm-pane {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 10px;
+      border-right: 2px solid #d3e6e7;
+    }
+    .group-guest-pane {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .group-top { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px; align-items: center; }
+    .group-marker { display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid #c4e3e4; border-radius: 50%; color: var(--ink-original); background: var(--aqua); font: 800 22px/1 var(--original-display); }
     .group-cell[data-open="true"] .group-marker { color: var(--ink-soft-original); background: var(--aqua-pale); }
-    .dm-block .micro-label { display: block; color: var(--ink-soft-original); font: 400 12px/1 var(--original-mono); }
-    .dm-name { display: block; margin-top: 10px; overflow-wrap: anywhere; color: var(--ink-original); font: 750 clamp(18px, 1.7vw, 28px)/1 var(--original-display); text-transform: none; }
+    .dm-block .micro-label { display: block; color: var(--ink-soft-original); font: 400 11px/1 var(--original-mono); }
+    .dm-name { display: block; margin-top: 6px; overflow-wrap: anywhere; color: var(--ink-original); font: 750 clamp(14px, 1.25vw, 20px)/1.05 var(--original-display); text-transform: none; }
     .group-cell[data-open="true"] .dm-name { color: var(--ink-soft-original); font-style: italic; font-weight: 450; }
-    .capacity { align-self: center; color: var(--red); font: 650 clamp(17px, 1.45vw, 24px)/1 var(--original-mono); }
+    .capacity { color: var(--red); font: 650 clamp(14px, 1.2vw, 18px)/1 var(--original-mono); }
     .group-cell[data-open="true"] .capacity { color: var(--ink-soft-original); }
-    .group-context { min-height: 28px; margin: 17px 0 10px; color: var(--aqua-dark); font: 400 clamp(12px, 1.05vw, 17px)/1.25 var(--original-mono); text-transform: none; }
-    .diver-list { display: grid; gap: 5px; margin: auto 0 0; padding: 0; list-style: none; }
-    .diver-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) 16px; gap: 10px; min-height: 40px; align-items: center; padding: 0 9px; border: 2px solid #d4e7e8; border-radius: 7px; background: var(--aqua-pale); }
-    .diver-index { color: var(--aqua-dark); font: 600 14px/1 var(--original-mono); }
-    .diver-name { overflow-wrap: anywhere; color: var(--ink-original); font: 650 clamp(13px, 1.15vw, 19px)/1.15 var(--original-display); text-transform: none; }
+    .group-context { min-height: 0; margin: 0; color: var(--aqua-dark); font: 400 clamp(11px, .95vw, 14px)/1.25 var(--original-mono); text-transform: none; }
+    .diver-list { display: grid; gap: 4px; flex: 1 1 auto; margin: 0; padding: 0; list-style: none; align-content: start; }
+    .diver-row { display: grid; grid-template-columns: 22px minmax(0, 1fr) 14px; gap: 6px; min-height: 30px; align-items: center; padding: 0 7px; border: 2px solid #d4e7e8; border-radius: 7px; background: var(--aqua-pale); }
+    .diver-index { color: var(--aqua-dark); font: 600 12px/1 var(--original-mono); }
+    .diver-name { overflow-wrap: anywhere; color: var(--ink-original); font: 650 clamp(12px, 1.05vw, 16px)/1.1 var(--original-display); text-transform: none; }
     .group-cell[data-open="true"] .diver-name { color: var(--ink-soft-original); font-style: italic; font-weight: 450; }
-    .diver-note { color: var(--ink-soft-original); font: 500 12px/1 var(--original-mono); text-align: right; }
-    .group-copy-row { display: flex; justify-content: flex-end; gap: 6px; margin: 0 0 8px; }
+    .diver-note { color: var(--ink-soft-original); font: 500 11px/1 var(--original-mono); text-align: right; }
+    .group-copy-row { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 4px; margin-top: auto; }
     .copy-names-btn,
     .paste-names-btn {
       min-height: 28px;
@@ -512,15 +528,15 @@
       .session-header { min-height: 82px; }
       .session-time { font-size: clamp(48px, 5.4vw, 76px); }
       .session-status { min-height: 44px; }
-      .group-grid { gap: 8px 18px; padding: 16px 0 6px; }
-      .group-cell { padding: 12px 18px 9px; }
-      .group-top { grid-template-columns: 50px minmax(0, 1fr) auto; gap: 11px; }
-      .group-marker { width: 48px; height: 48px; font-size: 24px; }
-      .dm-name { margin-top: 6px; font-size: clamp(16px, 1.55vw, 23px); }
-      .group-context { min-height: 22px; margin: 9px 0 6px; font-size: clamp(11px, .95vw, 15px); }
-      .diver-list { gap: 4px; }
-      .diver-row { min-height: 31px; padding: 0 8px; }
-      .diver-name { font-size: clamp(12px, 1.05vw, 17px); }
+      .group-grid { gap: 8px 10px; padding: 12px 0 6px; }
+      .group-cell { padding: 10px; gap: 8px 10px; }
+      .group-top { grid-template-columns: 40px minmax(0, 1fr); gap: 7px; }
+      .group-marker { width: 40px; height: 40px; font-size: 20px; }
+      .dm-name { margin-top: 4px; font-size: clamp(13px, 1.2vw, 18px); }
+      .group-context { font-size: clamp(10px, .9vw, 13px); }
+      .diver-list { gap: 3px; }
+      .diver-row { min-height: 28px; padding: 0 6px; }
+      .diver-name { font-size: clamp(11px, 1vw, 15px); }
       .slide-footer { margin-top: 6px; padding-top: 6px; }
     }
 
@@ -529,10 +545,10 @@
       .udive-logo-image { max-height: 120px; }
       .deck-date-card { max-width: 380px; padding: 20px 26px; }
       .schedule-column { gap: 20px; padding: 10px 20px; }
-      .group-cell { padding: 14px 15px 10px; }
-      .group-marker { width: 50px; height: 50px; font-size: 25px; }
-      .group-top { grid-template-columns: 50px minmax(0, 1fr) auto; gap: 10px; }
-      .group-grid { gap: 10px 14px; padding-top: 20px; }
+      .group-cell { padding: 10px; grid-template-columns: minmax(110px, .95fr) minmax(120px, 1.15fr); }
+      .group-marker { width: 40px; height: 40px; font-size: 20px; }
+      .group-top { grid-template-columns: 40px minmax(0, 1fr); gap: 7px; }
+      .group-grid { gap: 8px 10px; padding-top: 14px; }
     }
 
     @media (max-width: 900px) {
@@ -544,6 +560,7 @@
       .schedule-column { grid-template-columns: 1fr 1fr 1fr 1fr; }
       .schedule-site { grid-column: 1 / -1; }
       .group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
+      .group-cell { grid-template-columns: minmax(100px, .9fr) minmax(120px, 1.2fr); }
       .session-header { grid-template-columns: 1fr 1.5fr; }
       .session-date { grid-column: 1 / -1; justify-self: end; }
     }
@@ -575,8 +592,8 @@
       .session-summary-line { display: grid; grid-template-columns: 1fr; }
       .session-status { min-height: 42px; }
       .session-date { grid-column: auto; justify-self: start; }
-      .group-grid { grid-template-columns: 1fr; padding-top: 18px; }
-      .group-cell { min-height: 255px; }
+      .group-grid { grid-template-columns: 1fr; grid-template-rows: none; padding-top: 18px; }
+      .group-cell { min-height: 0; grid-template-columns: minmax(110px, .9fr) minmax(140px, 1.2fr); }
       .slide-footer { display: block; line-height: 1.5; }
       .slide-footer strong { display: block; margin-top: 8px; }
     }
@@ -789,6 +806,66 @@
               "note": ""
             }
           ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
         }
       ]
     },
@@ -917,6 +994,66 @@
               "note": ""
             }
           ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
         }
       ]
     },
@@ -983,6 +1120,66 @@
             {
               "name": "-",
               "note": "-"
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
             }
           ]
         },
@@ -1173,6 +1370,66 @@
               "note": ""
             }
           ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "marker": "?",
+          "dm": "unassigned",
+          "capacity": "0/3",
+          "context": "—",
+          "divers": [
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            },
+            {
+              "name": "open",
+              "note": ""
+            }
+          ]
         }
       ]
     }
@@ -1180,7 +1437,7 @@
 };
     // ===== END EDITABLE DEFAULT DATA =====
 
-    const STORAGE_KEY = "tulamben-dive-board-v2";
+    const STORAGE_KEY = "tulamben-dive-board-v3";
     const PLAYBACK_STORAGE_KEY = "tulamben-dive-board-playback-v1";
     const board = document.querySelector("#board");
     const navButtons = [...document.querySelectorAll("[data-view]")];
@@ -1200,16 +1457,37 @@
         && Array.isArray(value.overview) && value.overview.length === 4
         && value.sessions && requiredSessionIds.every(id =>
           value.sessions[id] && Array.isArray(value.sessions[id].groups)
-          && value.sessions[id].groups.length === 6
+          && value.sessions[id].groups.length === 9
         )
       );
+    }
+
+    function normalizeGroupCount(data) {
+      const emptyGroup = () => structuredClone({
+        marker: "?",
+        dm: "unassigned",
+        capacity: "0/3",
+        context: "—",
+        divers: [
+          { name: "open", note: "" },
+          { name: "open", note: "" },
+          { name: "open", note: "" }
+        ]
+      });
+      for (const id of requiredSessionIds) {
+        const session = data?.sessions?.[id];
+        if (!session || !Array.isArray(session.groups)) continue;
+        while (session.groups.length < 9) session.groups.push(emptyGroup());
+        session.groups = session.groups.slice(0, 9);
+      }
+      return data;
     }
 
     function loadData() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (!saved) return structuredClone(BOARD_DATA);
-        const parsed = JSON.parse(saved);
+        const parsed = normalizeGroupCount(JSON.parse(saved));
         return validateData(parsed) ? parsed : structuredClone(BOARD_DATA);
       } catch (error) {
         return structuredClone(BOARD_DATA);
@@ -1361,17 +1639,21 @@
           </li>`).join("");
         return `
           <section class="group-cell" data-open="${group.dm === "unassigned"}" aria-label="Group ${groupIndex + 1}">
-            <div class="group-top">
-              <span class="group-marker">${editableField(`${sessionPath}.groups.${groupIndex}.marker`, group.marker, `Group ${groupIndex + 1} marker`, { className: "edit-inline" })}</span>
-              <span class="dm-block"><span class="micro-label">DM</span><strong class="dm-name">${editableField(`${sessionPath}.groups.${groupIndex}.dm`, group.dm, `Group ${groupIndex + 1} dive master`)}</strong></span>
+            <div class="group-dm-pane">
+              <div class="group-top">
+                <span class="group-marker">${editableField(`${sessionPath}.groups.${groupIndex}.marker`, group.marker, `Group ${groupIndex + 1} marker`, { className: "edit-inline" })}</span>
+                <span class="dm-block"><span class="micro-label">DM</span><strong class="dm-name">${editableField(`${sessionPath}.groups.${groupIndex}.dm`, group.dm, `Group ${groupIndex + 1} dive master`)}</strong></span>
+              </div>
               <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
+              <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
+              ${state.editing ? `<div class="group-copy-row">
+                <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
+                <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
+              </div>` : ""}
             </div>
-            <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
-            ${state.editing ? `<div class="group-copy-row">
-              <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
-              <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
-            </div>` : ""}
-            <ol class="diver-list">${divers}</ol>
+            <div class="group-guest-pane">
+              <ol class="diver-list">${divers}</ol>
+            </div>
           </section>`;
       }).join("");
 
