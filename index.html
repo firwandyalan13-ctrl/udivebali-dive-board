@@ -406,7 +406,7 @@
     .group-cell[data-open="true"] .diver-name,
     .group-cell[data-empty="true"] .diver-name { color: var(--ink-soft); font-style: italic; font-weight: 450; }
     .diver-note { color: var(--ink-soft); font: 500 11px/1 var(--mono); text-align: right; }
-    .group-copy-row { display: flex; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-start; gap: 3px; margin-top: 0; }
+    .group-copy-row { display: flex; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; gap: 3px; margin-top: auto; }
     .copy-names-btn,
     .paste-names-btn {
       min-height: 22px;
@@ -1806,10 +1806,6 @@
               </div>
               ${renderDmPhoto(group)}
               ${state.editing ? renderDmSelect(groupIndex, group) : ""}
-              ${state.editing ? `<div class="group-copy-row">
-                <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
-                <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
-              </div>` : ""}
             </div>
             <div class="group-guest-pane">
               <div class="guest-meta">
@@ -1817,6 +1813,10 @@
                 <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
               </div>
               <ol class="diver-list">${divers}</ol>
+              ${state.editing ? `<div class="group-copy-row">
+                <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
+                <button type="button" class="copy-names-btn" data-copy-group="${groupIndex}" aria-label="Copy 3 guest names from group ${groupIndex + 1}">Copy names</button>
+              </div>` : ""}
             </div>
           </section>`;
       }).join("");
