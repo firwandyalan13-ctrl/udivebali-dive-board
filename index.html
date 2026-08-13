@@ -308,11 +308,11 @@
     .schedule-grid { display: grid; flex: 1 1 auto; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 10px; min-height: 0; }
     .schedule-column {
       display: grid;
-      grid-template-columns: minmax(150px, 1.12fr) minmax(170px, .95fr) minmax(90px, .7fr) minmax(80px, .7fr) minmax(210px, 1.7fr);
+      grid-template-columns: minmax(160px, .95fr) minmax(100px, .55fr) minmax(90px, .5fr) minmax(240px, 1.7fr);
       align-items: center;
-      gap: clamp(18px, 3vw, 54px);
+      gap: clamp(18px, 3vw, 48px);
       min-width: 0;
-      padding: 11px 34px;
+      padding: 14px 34px;
       border: 2px solid var(--line);
       border-radius: 10px;
       background: rgba(255, 255, 255, .96);
@@ -327,30 +327,7 @@
     }
     .is-editing .schedule-column:hover { transform: none; }
     .schedule-column:active { transform: translateY(0) scale(.995); }
-    .schedule-column[data-live="true"] {
-      border-width: 3px;
-      border-color: var(--aqua-dark);
-      box-shadow: 0 8px 18px rgba(23, 155, 151, .18);
-    }
     .schedule-time { margin: 0; color: var(--ink); font: 650 clamp(31px, 3.45vw, 54px)/1 var(--mono); letter-spacing: .05em; }
-    .schedule-status {
-      display: grid;
-      place-items: center;
-      min-height: 47px;
-      margin: 0;
-      border: 2px solid var(--line);
-      border-radius: var(--radius-pill);
-      color: var(--ink-soft);
-      background: var(--aqua-pale);
-      font: 750 clamp(13px, 1.15vw, 18px)/1 var(--mono);
-      text-align: center;
-    }
-    .schedule-column[data-live="true"] .schedule-status {
-      border-color: var(--aqua-dark);
-      color: var(--ink);
-      background: var(--aqua);
-      font-weight: 800;
-    }
     .schedule-metric span,
     .schedule-site span { display: block; color: var(--ink-soft); font: 400 13px/1 var(--mono); letter-spacing: .05em; }
     .schedule-metric strong { display: block; margin-top: 14px; color: var(--aqua-dark); font: 800 clamp(20px, 2vw, 31px)/1 var(--display); }
@@ -369,7 +346,7 @@
 
     .session-header {
       display: grid;
-      grid-template-columns: minmax(240px, .78fr) minmax(390px, 1.4fr) minmax(190px, .65fr);
+      grid-template-columns: minmax(220px, .72fr) minmax(220px, .9fr) minmax(220px, .8fr);
       align-items: center;
       gap: 26px;
       min-height: 105px;
@@ -383,18 +360,13 @@
       font: 500 clamp(12px, 1.05vw, 16px)/1 var(--mono);
       letter-spacing: .04em;
     }
-    .session-summary-line { display: flex; align-items: center; gap: 14px; min-width: 0; color: var(--aqua-dark); font: 500 clamp(16px, 1.55vw, 24px)/1 var(--mono); }
-    .session-status {
-      display: inline-grid;
-      flex: 0 0 min(245px, 45%);
-      place-items: center;
-      min-height: 52px;
-      border-radius: var(--radius-pill);
-      color: var(--ink);
-      background: var(--aqua);
-      font: 750 clamp(13px, 1.2vw, 19px)/1 var(--mono);
+    .session-summary-line {
+      display: grid;
+      grid-template-columns: auto auto;
+      justify-content: start;
+      gap: 28px;
+      min-width: 0;
     }
-    .session-summary { overflow-wrap: anywhere; }
     .session-date { justify-self: end; color: var(--ink-soft); font: 750 clamp(19px, 2vw, 31px)/1 var(--display); }
 
     .group-grid { display: grid; flex: 1 1 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px 14px; min-height: 0; padding: 18px 0 8px; }
@@ -733,7 +705,6 @@
       #board.slide-canvas { padding: 20px 34px; }
       .session-header { min-height: 82px; }
       .session-time { font-size: clamp(48px, 5.4vw, 76px); }
-      .session-status { min-height: 44px; }
       .group-grid { gap: 8px 10px; padding: 12px 0 6px; }
       .group-cell { padding: 10px; gap: 8px 10px; }
       .dm-name { margin-top: 4px; font-size: clamp(13px, 1.2vw, 18px); }
@@ -767,8 +738,7 @@
       }
       .overview-brand-row { grid-template-columns: 1fr 1fr; }
       .schedule-grid { grid-template-rows: none; }
-      .schedule-column { grid-template-columns: 1fr 1fr 1fr 1fr; }
-      .schedule-site { grid-column: 1 / -1; }
+      .schedule-column { grid-template-columns: minmax(120px, 1fr) minmax(80px, .55fr) minmax(80px, .5fr) minmax(160px, 1.4fr); }
       .group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
       .group-cell { grid-template-columns: minmax(100px, .9fr) minmax(120px, 1.2fr); }
       .session-header { grid-template-columns: 1fr 1.5fr; }
@@ -796,12 +766,10 @@
       .deck-title { margin-top: 22px; font-size: 12px; line-height: 1.35; }
       .schedule-column { grid-template-columns: 1fr 1fr; gap: 15px; padding: 18px; }
       .schedule-time { font-size: 37px; }
-      .schedule-status { min-height: 40px; }
       .schedule-site { grid-column: 1 / -1; }
       .session-header { grid-template-columns: 1fr; gap: 14px; padding-bottom: 20px; }
       .session-time { font-size: 58px; }
-      .session-summary-line { display: grid; grid-template-columns: 1fr; }
-      .session-status { min-height: 42px; }
+      .session-summary-line { display: grid; grid-template-columns: 1fr 1fr; }
       .session-date { grid-column: auto; justify-self: start; justify-items: start; }
       .session-tide { text-align: left; }
       .group-grid { grid-template-columns: 1fr; grid-template-rows: none; padding-top: 18px; }
@@ -1944,12 +1912,11 @@
       const rows = data.overview.map((item, index) => {
         const empty = Number(item.dmGroups) === 0 && Number(item.divers) === 0;
         return `
-        <section class="schedule-column" data-slot="${escapeHTML(item.id)}" data-live="${item.status === "IN WATER"}" data-empty="${empty}" ${state.editing ? "" : `data-jump="${escapeHTML(item.id)}" role="button" tabindex="0"`} aria-label="${state.editing ? "Edit" : "Open"} ${escapeHTML(item.time)} ${escapeHTML(item.status)} board">
+        <section class="schedule-column" data-slot="${escapeHTML(item.id)}" data-empty="${empty}" ${state.editing ? "" : `data-jump="${escapeHTML(item.id)}" role="button" tabindex="0"`} aria-label="${state.editing ? "Edit" : "Open"} ${escapeHTML(item.time)} board">
           <div class="schedule-time-block">
             <h2 class="schedule-time">${editableField(`overview.${index}.time`, item.time, `Time slot ${index + 1}`, { className: "edit-inline" })}</h2>
             <p class="schedule-tide-caption" data-tide-slot="${escapeHTML(item.id)}"><span>TIDE</span><strong>—</strong></p>
           </div>
-          <p class="schedule-status">${editableField(`overview.${index}.status`, item.status, `Status for ${item.time}`)}</p>
           <div class="schedule-metric"><span>DM GROUPS</span><strong data-auto-metric="overview.${index}.dmGroups">${escapeHTML(item.dmGroups)}</strong></div>
           <div class="schedule-metric"><span>DIVERS</span><strong data-auto-metric="overview.${index}.divers">${escapeHTML(item.divers)}</strong></div>
           <div class="schedule-site"><span>SITE</span><strong>${editableField(`overview.${index}.site`, item.site, `Dive site for ${item.time}`)}</strong>${empty ? `<em class="schedule-empty">No groups yet</em>` : ""}</div>
@@ -2020,6 +1987,7 @@
       const briefing = showBriefing
         ? `<p class="session-briefing">Briefing ${editableField(`${sessionPath}.sourceTime`, session.sourceTime, "Briefing time", { className: "edit-inline" })}</p>`
         : "";
+      const totals = computeSessionTotals(session);
 
       return `
         <article class="original-session">
@@ -2029,8 +1997,8 @@
               ${briefing}
             </div>
             <div class="session-summary-line">
-              <span class="session-status">${editableField(`${sessionPath}.status`, session.status, "Session status")}</span>
-              <span class="session-summary" data-auto-summary>${escapeHTML(session.summary)}</span>
+              <div class="schedule-metric"><span>DM GROUPS</span><strong data-auto-session-dm>${escapeHTML(totals.dmGroups)}</strong></div>
+              <div class="schedule-metric"><span>DIVERS</span><strong data-auto-session-divers>${escapeHTML(totals.divers)}</strong></div>
             </div>
             <div class="session-date">
               ${editableField("date.display", data.date.display, "Board date")}
@@ -2460,8 +2428,11 @@
       }
       const session = state.data.sessions[state.activeView];
       if (!session) return;
-      const summaryNode = board.querySelector("[data-auto-summary]");
-      if (summaryNode) summaryNode.textContent = session.summary;
+      const totals = computeSessionTotals(session);
+      const dmNode = board.querySelector("[data-auto-session-dm]");
+      const diversNode = board.querySelector("[data-auto-session-divers]");
+      if (dmNode) dmNode.textContent = String(totals.dmGroups);
+      if (diversNode) diversNode.textContent = String(totals.divers);
       session.groups.forEach((group, groupIndex) => {
         const capacityNode = board.querySelector(`[data-auto-capacity="${groupIndex}"]`);
         const cell = board.querySelector(`[data-group-index="${groupIndex}"]`);
