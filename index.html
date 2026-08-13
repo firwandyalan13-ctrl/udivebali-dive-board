@@ -238,11 +238,72 @@
     .deck-date-card small { display: block; margin-top: 24px; color: var(--ink-soft); font: 500 19px/1 var(--display); }
 
     .deck-title {
-      margin: 2px 6px 18px;
+      margin: 2px 6px 10px;
       color: var(--ink-soft);
       font: 500 clamp(15px, 1.45vw, 24px)/1 var(--mono);
       letter-spacing: .21em;
       text-transform: uppercase;
+    }
+    .tide-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(120px, .55fr);
+      gap: 8px 16px;
+      align-items: center;
+      margin: 0 0 12px;
+      padding: 10px 16px;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .92);
+    }
+    .tide-strip-copy { min-width: 0; }
+    .tide-kicker {
+      display: block;
+      color: var(--ink-soft);
+      font: 700 11px/1 var(--mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .tide-now {
+      display: block;
+      margin-top: 6px;
+      color: var(--aqua-dark);
+      font: 800 clamp(16px, 1.5vw, 22px)/1.1 var(--display);
+    }
+    .tide-extrema {
+      display: block;
+      margin-top: 6px;
+      color: var(--ink);
+      font: 550 clamp(12px, 1.05vw, 15px)/1.35 var(--mono);
+    }
+    .tide-note {
+      margin: 6px 0 0;
+      color: var(--ink-soft);
+      font: 500 11px/1.3 var(--mono);
+    }
+    .tide-spark {
+      width: 100%;
+      height: 36px;
+      color: var(--aqua-dark);
+    }
+    .schedule-time-block { min-width: 0; }
+    .schedule-tide-caption {
+      margin: 6px 0 0;
+      color: var(--aqua-dark);
+      font: 650 clamp(11px, .9vw, 13px)/1.2 var(--mono);
+      letter-spacing: .03em;
+    }
+    .schedule-tide-caption span {
+      display: inline;
+      margin-right: 6px;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+    .session-date { display: grid; justify-items: end; gap: 6px; }
+    .session-tide {
+      max-width: 34ch;
+      color: var(--aqua-dark);
+      font: 650 clamp(11px, .95vw, 13px)/1.3 var(--mono);
+      text-align: right;
     }
     .schedule-grid { display: grid; flex: 1 1 auto; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 10px; min-height: 0; }
     .schedule-column {
@@ -550,6 +611,101 @@
     .dm-roster-card-actions .danger { color: var(--red); border-color: rgba(217,75,73,.35); }
     .dm-roster-empty { grid-column: 1 / -1; color: var(--ink-soft); font: 500 14px/1.4 var(--mono); }
 
+    #ai-assistant-toggle {
+      border-color: var(--aqua-dark);
+      background: #fff;
+      font-weight: 800;
+    }
+    #ai-assistant-toggle:hover { background: var(--aqua-pale); }
+    .ai-assistant-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(18, 59, 75, .28);
+    }
+    .ai-assistant-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 71;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      width: min(420px, 100%);
+      height: 100dvh;
+      overflow: hidden;
+      border-left: 2px solid var(--line);
+      background: #f7f4ec;
+      box-shadow: -18px 0 40px rgba(18, 59, 75, .16);
+    }
+    .ai-assistant-drawer[hidden],
+    .ai-assistant-overlay[hidden] { display: none; }
+    .ai-assistant-header,
+    .ai-assistant-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 16px 18px;
+      border-bottom: 2px solid #d3e6e7;
+    }
+    .ai-assistant-footer { border-bottom: 0; border-top: 2px solid #d3e6e7; flex-wrap: wrap; }
+    .ai-assistant-header h2 { margin: 0; color: var(--ink); font: 800 18px/1 var(--display); letter-spacing: .04em; }
+    .ai-assistant-notice {
+      margin: 0;
+      padding: 12px 18px;
+      color: var(--ink-soft);
+      font: 500 12px/1.45 var(--mono);
+      background: var(--aqua-pale);
+    }
+    .ai-assistant-body { display: grid; gap: 10px; overflow: auto; padding: 16px 18px; align-content: start; }
+    .ai-assistant-body label {
+      color: var(--ink-soft);
+      font: 700 11px/1 var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    #ai-assistant-input {
+      width: 100%;
+      min-height: 96px;
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--ink);
+      background: #fff;
+      font: 500 14px/1.4 var(--display);
+      resize: vertical;
+    }
+    .ai-assistant-examples { margin: 0; color: var(--ink-soft); font: 500 11px/1.45 var(--mono); }
+    #ai-assistant-status { min-height: 1.2em; margin: 0; color: var(--aqua-dark); font: 700 12px/1.4 var(--display); }
+    #ai-assistant-status[data-kind="error"] { color: var(--red); }
+    #ai-assistant-status[data-kind="loading"] { color: var(--ink-soft); }
+    .ai-assistant-drawer.is-loading #ai-assistant-input { opacity: .6; }
+    .ai-message { margin: 0; font: 650 14px/1.4 var(--display); }
+    .ai-actions, .ai-warnings, .ai-errors { margin: 0; padding-left: 18px; font: 500 12px/1.4 var(--mono); }
+    .ai-warnings { color: var(--ink-soft); }
+    .ai-errors { color: var(--red); }
+    .ai-assistant-footer button {
+      min-height: 34px;
+      border: 1px solid rgba(18, 59, 75, .22);
+      border-radius: var(--radius-control);
+      padding: 0 11px;
+      color: var(--ink);
+      background: #faf8f2;
+      cursor: pointer;
+      font: 750 10px/1 var(--display);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    #ai-assistant-apply {
+      color: #fff;
+      border-color: var(--aqua-dark);
+      background: var(--aqua-dark);
+    }
+    #ai-assistant-apply:disabled { opacity: .45; cursor: not-allowed; }
+    #ai-assistant-close, #ai-assistant-cancel, #ai-assistant-clear, #ai-assistant-send {
+      color: var(--ink);
+    }
+
     .slide-footer { display: flex; justify-content: space-between; gap: 18px; flex: 0 0 auto; margin-top: 10px; padding-top: 9px; border-top: 3px solid #d3e6e7; color: var(--ink-soft); font: 400 clamp(11px, 1vw, 16px)/1.2 var(--mono); letter-spacing: .03em; }
     .original-overview .slide-footer { border-top: 0; }
     .slide-footer strong { color: var(--ink-soft); font-weight: 400; white-space: nowrap; }
@@ -617,6 +773,7 @@
       .group-cell { grid-template-columns: minmax(100px, .9fr) minmax(120px, 1.2fr); }
       .session-header { grid-template-columns: 1fr 1.5fr; }
       .session-date { grid-column: 1 / -1; justify-self: end; }
+      .tide-strip { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 760px) {
@@ -645,11 +802,15 @@
       .session-time { font-size: 58px; }
       .session-summary-line { display: grid; grid-template-columns: 1fr; }
       .session-status { min-height: 42px; }
-      .session-date { grid-column: auto; justify-self: start; }
+      .session-date { grid-column: auto; justify-self: start; justify-items: start; }
+      .session-tide { text-align: left; }
       .group-grid { grid-template-columns: 1fr; grid-template-rows: none; padding-top: 18px; }
       .group-cell { min-height: 0; grid-template-columns: minmax(110px, .9fr) minmax(140px, 1.2fr); }
       .slide-footer { display: block; line-height: 1.5; }
       .slide-footer strong { display: block; margin-top: 8px; }
+      .ai-assistant-drawer { width: 100%; }
+      .tide-strip { grid-template-columns: 1fr; padding: 10px 12px; }
+      .session-date, .session-tide { justify-items: start; text-align: left; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -696,6 +857,7 @@
     <div class="control-cluster ops-controls">
       <button id="dm-roster-toggle" type="button">DM roster</button>
       <button id="edit-toggle" type="button" aria-pressed="false">Edit board</button>
+      <button id="ai-assistant-toggle" type="button">AI Assistant</button>
       <button id="export-button" type="button">Export</button>
       <label class="import-button">Import<input id="import-input" type="file" accept="application/json" hidden></label>
       <button id="reset-button" type="button">Reset</button>
@@ -727,6 +889,27 @@
       </footer>
     </section>
   </div>
+  <div id="ai-assistant-overlay" class="ai-assistant-overlay" hidden></div>
+  <aside id="ai-assistant-drawer" class="ai-assistant-drawer" hidden aria-hidden="true" aria-labelledby="ai-assistant-title" role="dialog">
+    <header class="ai-assistant-header">
+      <h2 id="ai-assistant-title">AI Assistant</h2>
+      <button id="ai-assistant-close" type="button">Close</button>
+    </header>
+    <p id="ai-assistant-notice" class="ai-assistant-notice"></p>
+    <div class="ai-assistant-body">
+      <label for="ai-assistant-input">Command</label>
+      <textarea id="ai-assistant-input" placeholder="Assign Alan to the 14:00 Liberty Wreck group"></textarea>
+      <p class="ai-assistant-examples">Examples: Assign Alan to the 14:00 Liberty Wreck group · Move Budi from 09:00 to 11:00 · Check today’s schedule · 幫我檢查今天的 DM 比例</p>
+      <p id="ai-assistant-status" role="status"></p>
+      <div id="ai-assistant-result"></div>
+    </div>
+    <footer class="ai-assistant-footer">
+      <button id="ai-assistant-send" type="button">Send</button>
+      <button id="ai-assistant-clear" type="button">Clear</button>
+      <button id="ai-assistant-cancel" type="button">Cancel</button>
+      <button id="ai-assistant-apply" type="button" disabled>Apply</button>
+    </footer>
+  </aside>
   <script>
     // ===== EDITABLE DEFAULT DATA: BOARD_DATA =====
     const BOARD_DATA = {
@@ -1762,7 +1945,10 @@
         const empty = Number(item.dmGroups) === 0 && Number(item.divers) === 0;
         return `
         <section class="schedule-column" data-slot="${escapeHTML(item.id)}" data-live="${item.status === "IN WATER"}" data-empty="${empty}" ${state.editing ? "" : `data-jump="${escapeHTML(item.id)}" role="button" tabindex="0"`} aria-label="${state.editing ? "Edit" : "Open"} ${escapeHTML(item.time)} ${escapeHTML(item.status)} board">
-          <h2 class="schedule-time">${editableField(`overview.${index}.time`, item.time, `Time slot ${index + 1}`, { className: "edit-inline" })}</h2>
+          <div class="schedule-time-block">
+            <h2 class="schedule-time">${editableField(`overview.${index}.time`, item.time, `Time slot ${index + 1}`, { className: "edit-inline" })}</h2>
+            <p class="schedule-tide-caption" data-tide-slot="${escapeHTML(item.id)}"><span>TIDE</span><strong>—</strong></p>
+          </div>
           <p class="schedule-status">${editableField(`overview.${index}.status`, item.status, `Status for ${item.time}`)}</p>
           <div class="schedule-metric"><span>DM GROUPS</span><strong data-auto-metric="overview.${index}.dmGroups">${escapeHTML(item.dmGroups)}</strong></div>
           <div class="schedule-metric"><span>DIVERS</span><strong data-auto-metric="overview.${index}.divers">${escapeHTML(item.divers)}</strong></div>
@@ -1783,6 +1969,15 @@
             </div>
           </header>
           <h1 class="deck-title">TULAMBEN · DAILY DIVE BOARD</h1>
+          <section class="tide-strip" data-tide-strip aria-label="Tulamben tide">
+            <div class="tide-strip-copy">
+              <span class="tide-kicker">Tulamben tide</span>
+              <strong class="tide-now" data-tide-now>Loading tide…</strong>
+              <span class="tide-extrema" data-tide-extrema></span>
+              <p class="tide-note" data-tide-note>Modeled sea level · WITA · not for navigation</p>
+            </div>
+            <svg class="tide-spark" data-tide-spark viewBox="0 0 96 28" aria-hidden="true"></svg>
+          </section>
           <div class="schedule-grid">${rows}</div>
           <footer class="slide-footer"><span>${editableField("overviewSafety", data.overviewSafety, "Overview safety note")}</span><strong>UDIVEBALI TULAMBEN</strong></footer>
         </article>`;
@@ -1837,7 +2032,10 @@
               <span class="session-status">${editableField(`${sessionPath}.status`, session.status, "Session status")}</span>
               <span class="session-summary" data-auto-summary>${escapeHTML(session.summary)}</span>
             </div>
-            <div class="session-date">${editableField("date.display", data.date.display, "Board date")}</div>
+            <div class="session-date">
+              ${editableField("date.display", data.date.display, "Board date")}
+              <p class="session-tide" data-tide-session>Loading tide…</p>
+            </div>
           </header>
           <div class="group-grid">${groups}</div>
           <footer class="slide-footer"><span>${editableField("safety", data.safety, "Safety note")}</span><strong>UDIVEBALI TULAMBEN</strong></footer>
@@ -1981,7 +2179,10 @@
           else if (String(peer.value) !== String(value)) peer.value = value;
         });
 
-        if (path === "date.display") syncDateDerivedFields(String(value));
+        if (path === "date.display") {
+          syncDateDerivedFields(String(value));
+          window.DiveTide?.refresh?.();
+        }
         if (/\.groups\.\d+\.dm$/.test(path) || /\.divers\.\d+\.name$/.test(path)) {
           updateLiveDerivedDisplays();
         }
@@ -2418,6 +2619,7 @@
           setActiveView(button.dataset.jump);
         }
       }));
+      window.DiveTide?.refresh?.();
     }
 
     function exportData() {
@@ -2582,6 +2784,37 @@
 
     syncDerivedCounts();
     renderApp();
+
+    window.DiveBoard = {
+      getData() {
+        return state.data;
+      },
+      getDateISO() {
+        const parsed = parseBoardDate(state.data.date.display);
+        if (!parsed) return null;
+        const month = String(parsed.getMonth() + 1).padStart(2, "0");
+        const day = String(parsed.getDate()).padStart(2, "0");
+        return `${parsed.getFullYear()}-${month}-${day}`;
+      },
+      getSlots() {
+        return (state.data.overview || []).map(item => ({ id: item.id, time: item.time }));
+      },
+      applyBoardData(next) {
+        try {
+          state.data = next;
+          saveState();
+          renderApp();
+        } catch (error) {
+          showStatus("Could not apply AI changes", "error");
+        }
+      }
+    };
   </script>
+  <script>
+    window.DIVE_BOARD_AI_API_URL = window.DIVE_BOARD_AI_API_URL || "";
+    window.VITE_AI_API_URL = window.VITE_AI_API_URL || window.DIVE_BOARD_AI_API_URL || "";
+  </script>
+  <script type="module" src="js/ai-assistant.js"></script>
+  <script type="module" src="js/tide-board.js"></script>
 </body>
 </html>

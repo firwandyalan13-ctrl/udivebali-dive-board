@@ -1,0 +1,11 @@
+{
+  "name": "udivebali-dive-board",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "node --check js/board-model.js js/rule-engine.js js/action-schema.js js/action-validator.js js/action-executor.js js/command-parser.js js/ai-client.js js/ai-orchestrator.js js/ai-assistant.js js/tide-model.js js/tide-board.js api/ai.mjs api/vercel-ai.js netlify/functions/ai.mjs workers/ai.js",
+    "typecheck": "node -e \"console.log('No TypeScript sources to check')\"",
+    "build": "npm run lint && npm test"
+  }
+}
