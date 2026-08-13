@@ -1879,6 +1879,58 @@
       return date.toLocaleDateString("en-US", { weekday: "long" });
     }
 
+    function baliToday() {
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Makassar",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        weekday: "long"
+      }).formatToParts(new Date());
+      const pick = type => parts.find(part => part.type === type)?.value || "";
+      return {
+        display: `${Number(pick("day"))} ${pick("month").slice(0, 3).toUpperCase()} ${pick("year")}`,
+        weekday: pick("weekday")
+      };
+    }
+
+    function stampBoardToToday(data) {
+      if (!data?.date) return false;
+      const today = baliToday();
+      if (data.date.display === today.display && data.date.weekday === today.weekday) return false;
+      data.date.display = today.display;
+      data.date.weekday = today.weekday;
+      return true;
+    }
+
+    function persistBoardQuietly() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+      } catch {}
+    }
+
+    function msUntilNextBaliMidnight() {
+      const iso = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Makassar",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(new Date());
+      const [year, month, day] = iso.split("-").map(Number);
+      const next = Date.UTC(year, month - 1, day + 1, 0, 0, 0) - 8 * 60 * 60 * 1000;
+      return Math.max(1000, next - Date.now() + 250);
+    }
+
+    function armDateRollover() {
+      setTimeout(() => {
+        if (stampBoardToToday(state.data)) {
+          persistBoardQuietly();
+          renderApp();
+        }
+        armDateRollover();
+      }, msUntilNextBaliMidnight());
+    }
+
     function toDateInputValue(display) {
       const parsed = parseBoardDate(display);
       if (!parsed) return "";
@@ -2644,6 +2696,7 @@
     function resetData() {
       if (!confirm("Restore the original board data? Saved edits will be removed.")) return;
       state.data = ensureDmRoster(structuredClone(BOARD_DATA));
+      stampBoardToToday(state.data);
       saveState();
       renderApp();
       showStatus("Original board restored");
@@ -2770,8 +2823,10 @@
       setActiveView(VIEWS[(current + direction + VIEWS.length) % VIEWS.length]);
     });
 
+    if (stampBoardToToday(state.data)) persistBoardQuietly();
     syncDerivedCounts();
     renderApp();
+    armDateRollover();
 
     window.DiveBoard = {
       getData() {
