@@ -202,95 +202,102 @@
     #board.slide-canvas::after { bottom: -210px; left: -160px; width: 500px; height: 390px; background: rgba(226, 219, 204, .48); }
 
     .original-overview,
-    .original-session { display: flex; flex-direction: column; width: 100%; height: 100%; animation: boardEnter .28s var(--ease) both; }
+    .original-session { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 0; overflow: hidden; animation: boardEnter .28s var(--ease) both; }
     @keyframes boardEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
     .overview-brand-row {
       display: grid;
-      grid-template-columns: minmax(300px, 1fr) minmax(330px, .82fr);
-      align-items: start;
-      gap: 36px;
-      min-height: 185px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, .72fr);
+      align-items: center;
+      gap: 16px;
+      flex: 0 0 auto;
+      min-height: 0;
     }
-    .udive-logo { display: flex; min-width: 0; align-items: flex-start; }
+    .udive-logo { display: flex; min-width: 0; align-items: center; }
     .udive-logo-image {
       display: block;
-      width: min(100%, 720px);
+      width: min(100%, 520px);
       height: auto;
-      max-height: 175px;
+      max-height: 72px;
       object-fit: contain;
-      object-position: left top;
+      object-position: left center;
     }
 
     .deck-date-card {
       position: relative;
       justify-self: end;
-      width: min(100%, 485px);
-      margin-top: 18px;
-      padding: 28px 34px 24px;
+      width: min(100%, 340px);
+      margin-top: 0;
+      padding: 10px 16px;
       border: 2px solid var(--line);
       border-radius: var(--radius-card);
       background: rgba(255, 255, 255, .94);
       box-shadow: 0 6px 10px rgba(32, 59, 65, .18);
     }
-    .deck-date-card .date-label { display: block; color: var(--ink-soft); font: 400 15px/1 var(--mono); }
-    .deck-date-card strong { display: block; margin-top: 18px; color: var(--aqua-dark); font: 850 clamp(34px, 3.2vw, 54px)/1 var(--display); letter-spacing: .04em; }
-    .deck-date-card small { display: block; margin-top: 24px; color: var(--ink-soft); font: 500 19px/1 var(--display); }
+    .deck-date-card .date-label { display: block; color: var(--ink-soft); font: 400 11px/1 var(--mono); }
+    .deck-date-card strong { display: block; margin-top: 4px; color: var(--aqua-dark); font: 850 clamp(22px, 2.2vw, 34px)/1 var(--display); letter-spacing: .04em; }
+    .deck-date-card small { display: block; margin-top: 4px; color: var(--ink-soft); font: 500 13px/1.2 var(--display); }
 
     .deck-title {
-      margin: 2px 6px 10px;
+      flex: 0 0 auto;
+      margin: 4px 2px 6px;
       color: var(--ink-soft);
-      font: 500 clamp(15px, 1.45vw, 24px)/1 var(--mono);
-      letter-spacing: .21em;
+      font: 500 clamp(12px, 1.1vw, 16px)/1 var(--mono);
+      letter-spacing: .18em;
       text-transform: uppercase;
     }
     .tide-strip {
       display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(120px, .55fr);
-      gap: 8px 16px;
+      grid-template-columns: auto minmax(0, 1.1fr) minmax(0, 1.5fr) 96px;
+      gap: 6px 12px;
       align-items: center;
-      margin: 0 0 12px;
-      padding: 10px 16px;
+      flex: 0 0 auto;
+      min-width: 0;
+      margin: 0 0 8px;
+      padding: 6px 12px;
       border: 2px solid var(--line);
       border-radius: 10px;
       background: rgba(255, 255, 255, .92);
     }
-    .tide-strip-copy { min-width: 0; }
+    .tide-strip-copy { display: contents; }
     .tide-kicker {
-      display: block;
       color: var(--ink-soft);
-      font: 700 11px/1 var(--mono);
+      font: 700 10px/1 var(--mono);
       letter-spacing: .12em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
     .tide-now {
-      display: block;
-      margin-top: 6px;
+      min-width: 0;
       color: var(--aqua-dark);
-      font: 800 clamp(16px, 1.5vw, 22px)/1.1 var(--display);
+      font: 800 clamp(13px, 1.2vw, 18px)/1.15 var(--display);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .tide-extrema {
-      display: block;
-      margin-top: 6px;
+      min-width: 0;
       color: var(--ink);
-      font: 550 clamp(12px, 1.05vw, 15px)/1.35 var(--mono);
+      font: 550 clamp(11px, .95vw, 13px)/1.2 var(--mono);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .tide-note {
-      margin: 6px 0 0;
-      color: var(--ink-soft);
-      font: 500 11px/1.3 var(--mono);
-    }
+    .tide-note { display: none; }
     .tide-spark {
       width: 100%;
-      height: 36px;
+      height: 22px;
       color: var(--aqua-dark);
     }
-    .schedule-time-block { min-width: 0; }
+    .schedule-time-block { min-width: 0; overflow: hidden; }
     .schedule-tide-caption {
-      margin: 6px 0 0;
+      margin: 2px 0 0;
       color: var(--aqua-dark);
-      font: 650 clamp(11px, .9vw, 13px)/1.2 var(--mono);
+      font: 650 clamp(10px, .85vw, 12px)/1.2 var(--mono);
       letter-spacing: .03em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .schedule-tide-caption span {
       display: inline;
@@ -305,14 +312,16 @@
       font: 650 clamp(11px, .95vw, 13px)/1.3 var(--mono);
       text-align: right;
     }
-    .schedule-grid { display: grid; flex: 1 1 auto; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 10px; min-height: 0; }
+    .schedule-grid { display: grid; flex: 1 1 auto; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 8px; min-height: 0; overflow: hidden; }
     .schedule-column {
       display: grid;
-      grid-template-columns: minmax(160px, .95fr) minmax(100px, .55fr) minmax(90px, .5fr) minmax(240px, 1.7fr);
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .5fr) minmax(0, .45fr) minmax(0, 1.55fr);
       align-items: center;
-      gap: clamp(18px, 3vw, 48px);
+      gap: 8px 16px;
       min-width: 0;
-      padding: 14px 34px;
+      min-height: 0;
+      overflow: hidden;
+      padding: 8px 20px;
       border: 2px solid var(--line);
       border-radius: 10px;
       background: rgba(255, 255, 255, .96);
@@ -327,20 +336,33 @@
     }
     .is-editing .schedule-column:hover { transform: none; }
     .schedule-column:active { transform: translateY(0) scale(.995); }
-    .schedule-time { margin: 0; color: var(--ink); font: 650 clamp(31px, 3.45vw, 54px)/1 var(--mono); letter-spacing: .05em; }
+    .schedule-time { margin: 0; color: var(--ink); font: 650 clamp(22px, 2.4vw, 40px)/1 var(--mono); letter-spacing: .04em; }
+    .schedule-metric,
+    .schedule-site { min-width: 0; overflow: hidden; }
     .schedule-metric span,
-    .schedule-site span { display: block; color: var(--ink-soft); font: 400 13px/1 var(--mono); letter-spacing: .05em; }
-    .schedule-metric strong { display: block; margin-top: 14px; color: var(--aqua-dark); font: 800 clamp(20px, 2vw, 31px)/1 var(--display); }
+    .schedule-site span { display: block; color: var(--ink-soft); font: 400 11px/1 var(--mono); letter-spacing: .05em; }
+    .schedule-metric strong { display: block; margin-top: 4px; color: var(--aqua-dark); font: 800 clamp(16px, 1.6vw, 24px)/1 var(--display); }
     .schedule-column[data-empty="true"] .schedule-metric strong {
       color: var(--ink-soft);
       font-weight: 500;
     }
-    .schedule-site strong { display: block; margin-top: 14px; overflow-wrap: anywhere; color: var(--ink); font: 750 clamp(19px, 1.75vw, 29px)/1 var(--display); }
+    .schedule-site strong {
+      display: block;
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--ink);
+      font: 750 clamp(15px, 1.45vw, 22px)/1.15 var(--display);
+    }
     .schedule-empty {
       display: none;
-      margin-top: 8px;
+      margin-top: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: var(--ink-soft);
-      font: 500 12px/1.2 var(--mono);
+      font: 500 11px/1.2 var(--mono);
     }
     .schedule-column[data-empty="true"] .schedule-empty { display: block; }
 
@@ -717,10 +739,10 @@
     }
 
     @media (max-width: 1120px) {
-      .overview-brand-row { min-height: 145px; }
-      .udive-logo-image { max-height: 120px; }
-      .deck-date-card { max-width: 380px; padding: 20px 26px; }
-      .schedule-column { gap: 20px; padding: 10px 20px; }
+      .overview-brand-row { gap: 12px; }
+      .udive-logo-image { max-height: 64px; }
+      .deck-date-card { max-width: 280px; padding: 8px 14px; }
+      .schedule-column { gap: 8px 12px; padding: 8px 14px; }
       .group-cell { padding: 10px; grid-template-columns: minmax(110px, .95fr) minmax(120px, 1.15fr); }
       .group-grid { gap: 8px 10px; padding-top: 14px; }
       .dm-photo { min-height: 36px; }
@@ -736,14 +758,16 @@
         max-height: none;
         overflow: visible;
       }
+      .original-overview, .original-session { overflow: visible; height: auto; }
       .overview-brand-row { grid-template-columns: 1fr 1fr; }
-      .schedule-grid { grid-template-rows: none; }
-      .schedule-column { grid-template-columns: minmax(120px, 1fr) minmax(80px, .55fr) minmax(80px, .5fr) minmax(160px, 1.4fr); }
+      .schedule-grid { grid-template-rows: none; overflow: visible; }
+      .schedule-column { grid-template-columns: minmax(0, 1fr) minmax(0, .55fr) minmax(0, .5fr) minmax(0, 1.4fr); }
       .group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
       .group-cell { grid-template-columns: minmax(100px, .9fr) minmax(120px, 1.2fr); }
       .session-header { grid-template-columns: 1fr 1.5fr; }
       .session-date { grid-column: 1 / -1; justify-self: end; }
-      .tide-strip { grid-template-columns: 1fr; }
+      .tide-strip { grid-template-columns: auto minmax(0, 1fr) 80px; }
+      .tide-extrema { grid-column: 1 / -1; }
     }
 
     @media (max-width: 760px) {
@@ -759,13 +783,13 @@
       .slide-stage { padding: 0; overflow-x: clip; }
       #board.slide-canvas { padding: 24px 16px; overflow-x: clip; overflow-y: visible; box-shadow: none; }
       .overview-brand-row { grid-template-columns: 1fr; gap: 12px; }
-      .udive-logo-image { width: min(100%, 520px); max-height: none; }
-      .deck-date-card { justify-self: stretch; width: 100%; margin-top: 0; padding: 18px 20px; }
-      .deck-date-card strong { font-size: 32px; }
-      .deck-date-card small { margin-top: 12px; }
-      .deck-title { margin-top: 22px; font-size: 12px; line-height: 1.35; }
-      .schedule-column { grid-template-columns: 1fr 1fr; gap: 15px; padding: 18px; }
-      .schedule-time { font-size: 37px; }
+      .udive-logo-image { width: min(100%, 520px); max-height: 72px; }
+      .deck-date-card { justify-self: stretch; width: 100%; margin-top: 0; padding: 12px 16px; }
+      .deck-date-card strong { font-size: 28px; }
+      .deck-date-card small { margin-top: 6px; }
+      .deck-title { margin-top: 8px; font-size: 12px; line-height: 1.35; }
+      .schedule-column { grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr) minmax(0, .7fr); gap: 10px 12px; padding: 12px 14px; overflow: hidden; }
+      .schedule-time { font-size: 28px; }
       .schedule-site { grid-column: 1 / -1; }
       .session-header { grid-template-columns: 1fr; gap: 14px; padding-bottom: 20px; }
       .session-time { font-size: 58px; }
@@ -1919,7 +1943,7 @@
           </div>
           <div class="schedule-metric"><span>DM GROUPS</span><strong data-auto-metric="overview.${index}.dmGroups">${escapeHTML(item.dmGroups)}</strong></div>
           <div class="schedule-metric"><span>DIVERS</span><strong data-auto-metric="overview.${index}.divers">${escapeHTML(item.divers)}</strong></div>
-          <div class="schedule-site"><span>SITE</span><strong>${editableField(`overview.${index}.site`, item.site, `Dive site for ${item.time}`)}</strong>${empty ? `<em class="schedule-empty">No groups yet</em>` : ""}</div>
+          <div class="schedule-site"><span>SITE</span><strong>${editableField(`overview.${index}.site`, item.site, `Dive site for ${item.time}`)}</strong></div>
         </section>`;
       }).join("");
 
@@ -1936,7 +1960,7 @@
             </div>
           </header>
           <h1 class="deck-title">TULAMBEN · DAILY DIVE BOARD</h1>
-          <section class="tide-strip" data-tide-strip aria-label="Tulamben tide">
+          <section class="tide-strip" data-tide-strip aria-label="Tulamben tide" title="Modeled Tulamben tide · WITA · not for navigation">
             <div class="tide-strip-copy">
               <span class="tide-kicker">Tulamben tide</span>
               <strong class="tide-now" data-tide-now>Loading tide…</strong>
@@ -2415,14 +2439,7 @@
           const empty = Number(item.dmGroups) === 0 && Number(item.divers) === 0;
           if (dmNode) dmNode.textContent = String(item.dmGroups);
           if (diversNode) diversNode.textContent = String(item.divers);
-          if (column) {
-            column.dataset.empty = String(empty);
-            const hint = column.querySelector(".schedule-empty");
-            if (empty && !hint) {
-              const site = column.querySelector(".schedule-site");
-              if (site) site.insertAdjacentHTML("beforeend", `<em class="schedule-empty">No groups yet</em>`);
-            } else if (!empty && hint) hint.remove();
-          }
+          if (column) column.dataset.empty = String(empty);
         });
         return;
       }

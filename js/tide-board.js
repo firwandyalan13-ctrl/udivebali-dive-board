@@ -44,7 +44,7 @@ function writeCache(iso, series) {
 
 function extremaText(summary) {
   if (!summary.extrema.length) return "No high/low times for this date.";
-  return summary.extrema.map(item => `${item.type} ${item.hm} ${formatMeters(item.height)}`).join(" · ");
+  return summary.extrema.slice(0, 4).map(item => `${item.type} ${item.hm}`).join(" · ");
 }
 
 function nowText(summary) {
