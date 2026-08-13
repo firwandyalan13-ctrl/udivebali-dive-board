@@ -2,11 +2,12 @@ import {
   buildDaySummary,
   fetchTideSeries,
   formatMeters,
+  formatWave,
   isoDateInZone,
   sparklinePath
 } from "./tide-model.js";
 
-const CACHE_KEY = "tulamben-tide-v1";
+const CACHE_KEY = "tulamben-tide-v2";
 const REFRESH_MS = 60 * 1000;
 
 function boardApi() {
@@ -37,6 +38,7 @@ function writeCache(iso, series) {
       iso,
       times: series.times,
       values: series.values,
+      waves: series.waves || null,
       savedAt: Date.now()
     }));
   } catch {}
@@ -47,11 +49,38 @@ function extremaText(summary) {
   return summary.extrema.slice(0, 4).map(item => `${item.type} ${item.hm}`).join(" · ");
 }
 
+function waveLine(summary) {
+  if (summary.isToday && Number.isFinite(summary.nowWave?.height)) {
+    return `WAVE ${formatWave(summary.nowWave.height, summary.nowWave.period, summary.nowWave.direction)}`;
+  }
+  if (Number.isFinite(summary.dayWaveMin) && Number.isFinite(summary.dayWaveMax)) {
+    if (summary.dayWaveMin === summary.dayWaveMax) {
+      return `WAVE ${formatWave(summary.dayWaveMax)}`;
+    }
+    return `WAVE ${formatMeters(summary.dayWaveMin)}–${formatMeters(summary.dayWaveMax)}`;
+  }
+  return "";
+}
+
 function nowText(summary) {
   if (summary.isToday && Number.isFinite(summary.nowHeight)) {
     return `NOW ${summary.nowLabel || summary.nowTrend} ${formatMeters(summary.nowHeight)} · ${summary.clock} WITA`;
   }
   return `Tides for ${summary.boardIso}`;
+}
+
+function slotCaption(slot) {
+  const tide = `${slot.label} ${formatMeters(slot.height)}`;
+  if (!Number.isFinite(slot.waveHeight)) return tide;
+  return `${tide} · WAVE ${formatMeters(slot.waveHeight)}`;
+}
+
+function sessionLine(summary) {
+  const wave = waveLine(summary);
+  const tide = summary.isToday
+    ? `${summary.nowLabel || summary.nowTrend} ${formatMeters(summary.nowHeight)} · ${extremaText(summary)}`
+    : extremaText(summary);
+  return wave ? `${tide} · ${wave}` : tide;
 }
 
 function paintSpark(el, summary) {
@@ -84,20 +113,17 @@ function paintSummary(summary) {
   const note = document.querySelector("[data-tide-note]");
   const spark = document.querySelector("[data-tide-spark]");
   const session = document.querySelector("[data-tide-session]");
+  const wave = waveLine(summary);
   if (now) now.textContent = nowText(summary);
-  if (extrema) extrema.textContent = extremaText(summary);
-  if (note) note.textContent = "Modeled Tulamben tide · WITA · not for navigation";
+  if (extrema) extrema.textContent = [extremaText(summary), wave].filter(Boolean).join(" · ");
+  if (note) note.textContent = "Modeled Tulamben tide and wave · WITA · not for navigation";
   paintSpark(spark, summary);
-  if (session) {
-    session.textContent = summary.isToday
-      ? `${summary.nowLabel || summary.nowTrend} ${formatMeters(summary.nowHeight)} · ${extremaText(summary)}`
-      : extremaText(summary);
-  }
+  if (session) session.textContent = sessionLine(summary);
   for (const slot of summary.slotReadings) {
     const target = document.querySelector(`[data-tide-slot="${slot.id}"] strong`)
       || document.querySelector(`[data-tide-slot="${slot.id}"]`);
     if (!target) continue;
-    target.textContent = `${slot.label} ${formatMeters(slot.height)}`;
+    target.textContent = slotCaption(slot);
   }
 }
 
@@ -124,7 +150,7 @@ export async function refreshTide() {
     return;
   }
   const cached = readCache(iso);
-  const series = cached ? { times: cached.times, values: cached.values } : null;
+  const series = cached ? { times: cached.times, values: cached.values, waves: cached.waves || null } : null;
   if (series) {
     paintSummary(buildDaySummary(series, iso, slots()));
   }

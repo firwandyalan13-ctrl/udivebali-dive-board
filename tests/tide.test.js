@@ -3,13 +3,17 @@ import assert from "node:assert/strict";
 import {
   addIsoDays,
   buildDaySummary,
+  compassFromDeg,
   findExtrema,
   formatMeters,
+  formatWave,
   interpolateHeight,
   slotStamp,
   sparklinePath,
   tideApiUrl,
-  trendAt
+  trendAt,
+  waveApiUrl,
+  waveSizeLabel
 } from "../js/tide-model.js";
 
 function seriesFrom(pairs) {
@@ -80,4 +84,36 @@ test("formats meters and sparkline path", () => {
   assert.match(sparklinePath([0, 1, 0.5]), /^M/);
   assert.equal(addIsoDays("2026-08-13", -1), "2026-08-12");
   assert.match(tideApiUrl("2026-08-13"), /start_date=2026-08-12/);
+});
+
+test("labels wave size and compass from the swell direction", () => {
+  assert.equal(waveSizeLabel(0.26), "CALM");
+  assert.equal(waveSizeLabel(0.8), "SMALL");
+  assert.equal(waveSizeLabel(1.2), "MODERATE");
+  assert.equal(waveSizeLabel(1.8), "ROUGH");
+  assert.equal(compassFromDeg(70), "ENE");
+  assert.equal(compassFromDeg(0), "N");
+  assert.equal(formatWave(0.5, 5, 70), "SMALL 0.50m ENE 5s");
+  assert.match(waveApiUrl("2026-08-13"), /ncep_gfswave016/);
+  assert.match(waveApiUrl("2026-08-13"), /wave_height/);
+});
+
+test("day summary includes wave height on each dive slot", () => {
+  const series = seriesFrom([
+    ["2026-08-13T08:00", 0.4],
+    ["2026-08-13T09:00", 0.6],
+    ["2026-08-13T10:00", 0.8]
+  ]);
+  series.waves = {
+    times: ["2026-08-13T08:00", "2026-08-13T09:00", "2026-08-13T10:00"],
+    height: [0.2, 0.4, 0.6],
+    period: [4, 5, 6],
+    direction: [70, 72, 74]
+  };
+  const summary = buildDaySummary(series, "2026-08-13", [
+    { id: "slot-0900", time: "09:00" }
+  ], new Date("2026-08-12T00:00:00+08:00"));
+  assert.equal(summary.slotReadings[0].waveHeight, 0.4);
+  assert.equal(summary.dayWaveMin, 0.2);
+  assert.equal(summary.dayWaveMax, 0.6);
 });

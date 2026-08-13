@@ -307,7 +307,7 @@
     }
     .session-date { display: grid; justify-items: end; gap: 6px; }
     .session-tide {
-      max-width: 34ch;
+      max-width: 52ch;
       color: var(--aqua-dark);
       font: 650 clamp(11px, .95vw, 13px)/1.3 var(--mono);
       text-align: right;
@@ -1991,7 +1991,7 @@
         <section class="schedule-column" data-slot="${escapeHTML(item.id)}" data-empty="${empty}" ${state.editing ? "" : `data-jump="${escapeHTML(item.id)}" role="button" tabindex="0"`} aria-label="${state.editing ? "Edit" : "Open"} ${escapeHTML(item.time)} board">
           <div class="schedule-time-block">
             <h2 class="schedule-time">${editableField(`overview.${index}.time`, item.time, `Time slot ${index + 1}`, { className: "edit-inline" })}</h2>
-            <p class="schedule-tide-caption" data-tide-slot="${escapeHTML(item.id)}"><span>TIDE</span><strong>—</strong></p>
+            <p class="schedule-tide-caption" data-tide-slot="${escapeHTML(item.id)}"><span>SEA</span><strong>—</strong></p>
           </div>
           <div class="schedule-metric"><span>DM GROUPS</span><strong data-auto-metric="overview.${index}.dmGroups">${escapeHTML(item.dmGroups)}</strong></div>
           <div class="schedule-metric"><span>DIVERS</span><strong data-auto-metric="overview.${index}.divers">${escapeHTML(item.divers)}</strong></div>
@@ -2012,12 +2012,12 @@
             </div>
           </header>
           <h1 class="deck-title">TULAMBEN · DAILY DIVE BOARD</h1>
-          <section class="tide-strip" data-tide-strip aria-label="Tulamben tide" title="Modeled Tulamben tide · WITA · not for navigation">
+          <section class="tide-strip" data-tide-strip aria-label="Tulamben tide and wave" title="Modeled Tulamben tide and wave · WITA · not for navigation">
             <div class="tide-strip-copy">
-              <span class="tide-kicker">Tulamben tide</span>
+              <span class="tide-kicker">Tulamben sea</span>
               <strong class="tide-now" data-tide-now>Loading tide…</strong>
               <span class="tide-extrema" data-tide-extrema></span>
-              <p class="tide-note" data-tide-note>Modeled sea level · WITA · not for navigation</p>
+              <p class="tide-note" data-tide-note>Modeled sea level and wave · WITA · not for navigation</p>
             </div>
             <svg class="tide-spark" data-tide-spark viewBox="0 0 96 28" aria-hidden="true"></svg>
           </section>

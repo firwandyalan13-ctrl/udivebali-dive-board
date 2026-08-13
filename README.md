@@ -25,13 +25,15 @@ Then open http://127.0.0.1:8765/ if that server is already running, or:
 python3 -m http.server 8765 --bind 127.0.0.1
 ```
 
-## Tulamben tide
+## Tulamben tide and wave
 
-The overview and each session load **that board date’s** modeled tide for Tulamben (WITA). If the board date is today, the NOW line updates about every minute.
+The overview and each session load **that board date’s** modeled tide and wave for Tulamben (WITA). If the board date is today, the NOW line updates about every minute.
 
-- Source: Open-Meteo Marine `sea_level_height_msl` (no API key, browser fetch)
-- High/low times are turning points in the 15-minute series
-- Each dive slot (09:00, 11:00, 14:00, 18:30) shows the tide at that time
+- Tide: Open-Meteo Marine `sea_level_height_msl` (no API key, browser fetch)
+- Wave: Open-Meteo GFS WAVE `wave_height`, period, and direction (`ncep_gfswave016`)
+- High/low times are turning points in the 15-minute tide series
+- Each dive slot (09:00, 11:00, 14:00, 18:30) shows tide and significant wave height at that time
+- Wave size labels: CALM under 0.5m, SMALL under 1.0m, MODERATE under 1.5m, ROUGH 1.5m+
 - Changing the board date reloads that day’s curve
 - This is a planning aid, not a navigation product
 
