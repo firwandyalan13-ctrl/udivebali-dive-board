@@ -444,6 +444,26 @@
     }
     .guest-meta .group-context { min-width: 0; }
     .guest-meta .capacity { justify-self: end; white-space: nowrap; }
+    .group-activity-row {
+      display: flex;
+      gap: 4px;
+      min-width: 0;
+      align-items: center;
+    }
+    .activity-select,
+    .course-select {
+      min-width: 0;
+      min-height: 22px;
+      max-height: 24px;
+      border: 1.5px solid var(--line);
+      border-radius: 7px;
+      padding: 0 4px;
+      color: var(--aqua-dark);
+      background: #fff;
+      font: 650 clamp(10px, .8vw, 12px)/1 var(--mono);
+    }
+    .activity-select { flex: 1 1 auto; }
+    .course-select { flex: 0 0 4.8em; width: 4.8em; }
     .group-top { display: block; flex: 0 0 auto; }
     .group-marker { display: none; }
     .dm-block .micro-label { display: block; color: var(--ink-soft); font: 400 10px/1 var(--mono); }
@@ -1775,6 +1795,53 @@
       );
     }
 
+    function migrateGroupActivity(group) {
+      if (!group || typeof group !== "object") return group;
+      if (group.activity === "fundive" || group.activity === "courses") {
+        if (group.activity !== "courses") group.course = "";
+        else if (group.course !== "OW" && group.course !== "AOW") group.course = "";
+        if (!String(group.context ?? "").trim()) group.context = "—";
+        return group;
+      }
+      const raw = String(group.context ?? "").trim();
+      const parts = raw.split(/\s*[·•]\s*/).map(part => part.trim()).filter(Boolean);
+      const first = (parts[0] || "").toLowerCase();
+      if (first === "fundive" || first === "fun dive" || first === "fun-dive") {
+        group.activity = "fundive";
+        group.course = "";
+        group.context = parts.slice(1).join(" · ") || "—";
+        return group;
+      }
+      if (first === "course" || first === "courses") {
+        const rest = parts.slice(1);
+        const level = (rest[0] || "").toUpperCase();
+        group.activity = "courses";
+        if (level === "OW" || level === "AOW") {
+          group.course = level;
+          group.context = rest.slice(1).join(" · ") || "—";
+        } else {
+          group.course = "";
+          group.context = rest.join(" · ") || "—";
+        }
+        return group;
+      }
+      group.activity = group.activity || "";
+      group.course = group.course || "";
+      if (!raw) group.context = "—";
+      return group;
+    }
+
+    function formatGroupHeadline(group) {
+      const activity = group?.activity === "fundive" ? "Fundive"
+        : group?.activity === "courses" ? (group.course ? `Courses · ${group.course}` : "Courses")
+        : "";
+      const notes = String(group?.context ?? "").trim();
+      const hasNotes = notes && notes !== "—" && notes !== "-";
+      if (activity && hasNotes) return `${activity} · ${notes}`;
+      if (activity) return activity;
+      return hasNotes ? notes : "—";
+    }
+
     function ensureDmRoster(data) {
       if (!Array.isArray(data.dmRoster)) data.dmRoster = [];
       data.dmRoster = data.dmRoster.map((item, index) => ({
@@ -1785,6 +1852,7 @@
       for (const id of requiredSessionIds) {
         for (const group of data.sessions?.[id]?.groups || []) {
           if (typeof group.dmId !== "string") group.dmId = "";
+          migrateGroupActivity(group);
         }
       }
       return data;
@@ -1795,6 +1863,8 @@
         marker: "?",
         dm: "unassigned",
         capacity: "0/3",
+        activity: "",
+        course: "",
         context: "—",
         divers: [
           { name: "open", note: "" },
@@ -2047,9 +2117,12 @@
             </div>
             <div class="group-guest-pane">
               <div class="guest-meta">
-                <p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and context`)}</p>
+                ${state.editing
+                  ? `<div class="group-activity-row">${renderActivitySelect(groupIndex, group)}${group.activity === "courses" ? renderCourseSelect(groupIndex, group) : ""}</div>`
+                  : `<p class="group-context">${escapeHTML(formatGroupHeadline(group))}</p>`}
                 <span class="capacity" data-auto-capacity="${groupIndex}">${escapeHTML(group.capacity)}</span>
               </div>
+              ${state.editing ? `<p class="group-context">${editableField(`${sessionPath}.groups.${groupIndex}.context`, group.context, `Group ${groupIndex + 1} site and notes`)}</p>` : ""}
               <ol class="diver-list">${divers}</ol>
               ${state.editing ? `<div class="group-copy-row">
                 <button type="button" class="paste-names-btn" data-paste-group="${groupIndex}" aria-label="Paste guest names into group ${groupIndex + 1}">Paste names</button>
@@ -2296,6 +2369,18 @@
       return `<select class="dm-select" data-dm-select="${groupIndex}" aria-label="Select DM for group ${groupIndex + 1}">${options}</select>`;
     }
 
+    function renderActivitySelect(groupIndex, group) {
+      const selected = group.activity === "fundive" || group.activity === "courses" ? group.activity : "";
+      const option = (value, label) => `<option value="${value}"${selected === value ? " selected" : ""}>${label}</option>`;
+      return `<select class="activity-select" data-activity-select="${groupIndex}" aria-label="Fundive or courses for group ${groupIndex + 1}">${option("", "Type")}${option("fundive", "Fundive")}${option("courses", "Courses")}</select>`;
+    }
+
+    function renderCourseSelect(groupIndex, group) {
+      const selected = group.course === "AOW" ? "AOW" : group.course === "OW" ? "OW" : "";
+      const option = (value, label) => `<option value="${value}"${selected === value ? " selected" : ""}>${label}</option>`;
+      return `<select class="course-select" data-course-select="${groupIndex}" aria-label="OW or AOW for group ${groupIndex + 1}">${option("", "Level")}${option("OW", "OW")}${option("AOW", "AOW")}</select>`;
+    }
+
     function syncGroupDmLabelsFromRoster() {
       const roster = getDmRoster();
       const byId = Object.fromEntries(roster.map(item => [item.id, item]));
@@ -2426,6 +2511,35 @@
             group.dm = record.name?.trim() || "unassigned";
           }
           updateLiveDerivedDisplays();
+          saveState();
+          renderApp();
+        });
+      });
+    }
+
+    function bindActivitySelects() {
+      board.querySelectorAll("[data-activity-select]").forEach(select => {
+        select.addEventListener("change", () => {
+          const groupIndex = Number(select.dataset.activitySelect);
+          const group = state.data.sessions[state.activeView]?.groups?.[groupIndex];
+          if (!group) return;
+          group.activity = select.value === "fundive" || select.value === "courses" ? select.value : "";
+          if (group.activity === "courses") {
+            if (group.course !== "OW" && group.course !== "AOW") group.course = "OW";
+          } else {
+            group.course = "";
+          }
+          saveState();
+          renderApp();
+        });
+      });
+      board.querySelectorAll("[data-course-select]").forEach(select => {
+        select.addEventListener("change", () => {
+          const groupIndex = Number(select.dataset.courseSelect);
+          const group = state.data.sessions[state.activeView]?.groups?.[groupIndex];
+          if (!group) return;
+          group.activity = "courses";
+          group.course = select.value === "AOW" ? "AOW" : select.value === "OW" ? "OW" : "";
           saveState();
           renderApp();
         });
@@ -2650,6 +2764,7 @@
       bindCopyNameButtons();
       bindNamePasteDistribution();
       bindDmSelects();
+      bindActivitySelects();
       board.querySelectorAll("[data-jump]").forEach(button => button.addEventListener("click", () => {
         setActiveView(button.dataset.jump);
       }));
@@ -2844,7 +2959,7 @@
       },
       applyBoardData(next) {
         try {
-          state.data = next;
+          state.data = ensureDmRoster(next);
           saveState();
           renderApp();
         } catch (error) {

@@ -5,6 +5,7 @@ import {
   findDm,
   firstEmptyGroupIndex,
   firstOpenDiverIndex,
+  migrateGroupActivity,
   syncDerivedCounts
 } from "./board-model.js";
 import { validateActionsAgainstBoard } from "./action-validator.js";
@@ -62,7 +63,10 @@ function applyOne(data, action) {
       index = session.groups.length - 1;
     }
     const group = session.groups[index];
-    if (payload.context) group.context = payload.context;
+    if (payload.context) {
+      group.context = payload.context;
+      migrateGroupActivity(group);
+    }
     if (payload.dmName || payload.dmId) {
       const dm = findDm(data, payload);
       if (dm) {

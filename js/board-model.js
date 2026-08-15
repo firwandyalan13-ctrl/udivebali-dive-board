@@ -1,6 +1,9 @@
 export const SESSION_IDS = ["slot-0900", "slot-1100", "slot-1400", "slot-1830"];
 export const MAX_RATIO = 3;
 export const CERT_RANK = { OW: 1, AOW: 2, Rescue: 3, DM: 4 };
+export const ACTIVITY_FUN = "fundive";
+export const ACTIVITY_COURSES = "courses";
+export const COURSE_LEVELS = ["OW", "AOW"];
 
 const PLACEHOLDER_NAMES = new Set(["", "-", "—", "open"]);
 const PLACEHOLDER_DMS = new Set(["", "-", "—", "unassigned", "?"]);
@@ -47,10 +50,65 @@ export function emptyGroup() {
     marker: "?",
     dm: "unassigned",
     capacity: "0/3",
+    activity: "",
+    course: "",
     context: "—",
     divers: [emptyDiver(), emptyDiver(), emptyDiver()],
     dmId: ""
   };
+}
+
+export function parseGroupActivity(context, existing = {}) {
+  if (existing.activity === ACTIVITY_FUN || existing.activity === ACTIVITY_COURSES) {
+    const course = existing.activity === ACTIVITY_COURSES && COURSE_LEVELS.includes(existing.course)
+      ? existing.course
+      : "";
+    const notes = String(context ?? "").trim() || "—";
+    return { activity: existing.activity, course: existing.activity === ACTIVITY_COURSES ? course : "", context: notes };
+  }
+  const raw = String(context ?? "").trim();
+  if (!raw || raw === "-" || raw === "—") {
+    return { activity: "", course: "", context: "—" };
+  }
+  const parts = raw.split(/\s*[·•]\s*/).map(part => part.trim()).filter(Boolean);
+  const first = (parts[0] || "").toLowerCase();
+  if (first === "fundive" || first === "fun dive" || first === "fun-dive") {
+    return { activity: ACTIVITY_FUN, course: "", context: parts.slice(1).join(" · ") || "—" };
+  }
+  if (first === "course" || first === "courses") {
+    const rest = parts.slice(1);
+    const level = (rest[0] || "").toUpperCase();
+    if (COURSE_LEVELS.includes(level)) {
+      return { activity: ACTIVITY_COURSES, course: level, context: rest.slice(1).join(" · ") || "—" };
+    }
+    return { activity: ACTIVITY_COURSES, course: "", context: rest.join(" · ") || "—" };
+  }
+  return { activity: "", course: "", context: raw };
+}
+
+export function activityLabel(activity, course) {
+  if (activity === ACTIVITY_FUN) return "Fundive";
+  if (activity === ACTIVITY_COURSES) return course ? `Courses · ${course}` : "Courses";
+  return "";
+}
+
+export function formatGroupHeadline(group) {
+  const parsed = parseGroupActivity(group?.context, group || {});
+  const label = activityLabel(parsed.activity, parsed.course);
+  const notes = String(parsed.context ?? "").trim();
+  const hasNotes = notes && notes !== "—" && notes !== "-";
+  if (label && hasNotes) return `${label} · ${notes}`;
+  if (label) return label;
+  return hasNotes ? notes : "—";
+}
+
+export function migrateGroupActivity(group) {
+  if (!group || typeof group !== "object") return group;
+  const parsed = parseGroupActivity(group.context, group);
+  group.activity = parsed.activity;
+  group.course = parsed.course;
+  group.context = parsed.context;
+  return group;
 }
 
 export function migrateBoardData(data) {
@@ -62,6 +120,7 @@ export function migrateBoardData(data) {
     }
     for (const group of session.groups || []) {
       if (typeof group.dmId !== "string") group.dmId = "";
+      migrateGroupActivity(group);
       if (!Array.isArray(group.divers)) group.divers = [emptyDiver(), emptyDiver(), emptyDiver()];
       for (const diver of group.divers) {
         if (diver && typeof diver === "object") {
