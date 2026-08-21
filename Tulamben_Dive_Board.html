@@ -528,14 +528,35 @@
       font: 700 16px/1 var(--original-display);
     }
     .group-dm-pane .dm-photo {
-      flex: 0 1 auto;
+      flex: 1 1 0;
       min-width: 0;
       min-height: 0;
       width: 100%;
-      height: auto;
-      max-height: 100%;
+      border: 0;
+      background: transparent;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .group-dm-pane .dm-photo-frame {
+      box-sizing: border-box;
+      height: 100%;
+      width: auto;
+      max-width: 100%;
       aspect-ratio: 3 / 4;
-      align-self: center;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      border: 2px solid #d3e6e7;
+      border-radius: 8px;
+      background: var(--aqua-pale);
+    }
+    .group-dm-pane .dm-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
     }
     .dm-photo img {
       width: 100%;
@@ -2095,11 +2116,11 @@
     function renderDmPhoto(group) {
       const record = resolveDmRecord(group);
       const name = resolveDmName(group);
-      if (record?.photo) {
-        return `<div class="dm-photo" aria-hidden="true"><img src="${escapeHTML(record.photo)}" alt=""></div>`;
-      }
       const open = !name || ["-", "—", "unassigned", "?"].includes(name.toLowerCase());
-      return `<div class="dm-photo" aria-hidden="true">${open ? "?" : escapeHTML(dmInitials(name))}</div>`;
+      const inner = record?.photo
+        ? `<img src="${escapeHTML(record.photo)}" alt="">`
+        : (open ? "?" : escapeHTML(dmInitials(name)));
+      return `<div class="dm-photo" aria-hidden="true"><div class="dm-photo-frame">${inner}</div></div>`;
     }
 
     function renderDmSelect(groupIndex, group) {
