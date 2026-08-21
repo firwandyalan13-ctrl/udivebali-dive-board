@@ -489,8 +489,8 @@
     .capacity { flex: 0 0 auto; color: var(--red); font: 650 clamp(12px, 1.05vw, 16px)/1 var(--original-mono); }
     .group-cell[data-open="true"] .capacity { color: var(--ink-soft-original); }
     .group-context { flex: 0 0 auto; min-height: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--aqua-dark); font: 400 clamp(10px, .85vw, 12px)/1.2 var(--original-mono); text-transform: none; }
-    .diver-list { display: grid; gap: 3px; flex: 1 1 auto; min-height: 0; margin: 0; padding: 0; list-style: none; align-content: start; overflow: hidden; }
-    .diver-row { display: grid; grid-template-columns: 18px minmax(0, 1fr) 12px; gap: 5px; min-height: 0; height: 28px; align-items: center; padding: 0 6px; border: 2px solid #d4e7e8; border-radius: 7px; background: var(--aqua-pale); }
+    .diver-list { display: grid; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 3px; flex: 1 1 auto; min-height: 0; margin: 0; padding: 0; list-style: none; align-content: stretch; overflow: hidden; }
+    .diver-row { display: grid; grid-template-columns: 18px minmax(0, 1fr) 12px; gap: 5px; min-height: 0; height: auto; max-height: 32px; align-items: center; padding: 0 6px; border: 2px solid #d4e7e8; border-radius: 7px; background: var(--aqua-pale); }
     .diver-index { color: var(--aqua-dark); font: 600 12px/1 var(--original-mono); }
     .diver-name { overflow-wrap: anywhere; color: var(--ink-original); font: 650 clamp(12px, 1.05vw, 16px)/1.1 var(--original-display); text-transform: none; }
     .group-cell[data-open="true"] .diver-name { color: var(--ink-soft-original); font-style: italic; font-weight: 450; }
@@ -670,6 +670,11 @@
 
     .is-editing .schedule-column,
     .is-editing .group-cell { border-color: var(--red); }
+    .is-editing .session-header { min-height: 76px; gap: 16px; }
+    .is-editing .group-grid { padding-top: 10px; }
+    .is-editing .group-guest-pane { gap: 3px; }
+    .is-editing .diver-name { min-width: 0; overflow: hidden; }
+    .is-editing .diver-row .edit-field { min-height: 0; height: 1.15em; padding: 0 2px; }
     .slide-canvas .edit-field {
       width: 100%;
       min-width: 0;
@@ -698,7 +703,7 @@
       .dm-name { margin-top: 4px; font-size: clamp(13px, 1.2vw, 18px); }
       .group-context { font-size: clamp(10px, .9vw, 13px); }
       .diver-list { gap: 3px; }
-      .diver-row { min-height: 28px; padding: 0 6px; }
+      .diver-row { padding: 0 6px; }
       .diver-name { font-size: clamp(11px, 1vw, 15px); }
       .slide-footer { margin-top: 6px; padding-top: 6px; }
     }
