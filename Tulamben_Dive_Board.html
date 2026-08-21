@@ -520,16 +520,22 @@
     .dm-photo {
       display: grid;
       place-items: center;
-      flex: 1 1 0;
-      width: 100%;
-      min-height: 72px;
-      max-height: 100%;
       overflow: hidden;
       border: 2px solid #d3e6e7;
       border-radius: 8px;
       background: var(--aqua-pale);
       color: var(--ink-soft-original);
       font: 700 16px/1 var(--original-display);
+    }
+    .group-dm-pane .dm-photo {
+      flex: 0 1 auto;
+      min-width: 0;
+      min-height: 0;
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      aspect-ratio: 3 / 4;
+      align-self: center;
     }
     .dm-photo img {
       width: 100%;
@@ -603,7 +609,7 @@
       border-radius: 12px;
       background: #fff;
     }
-    .dm-roster-card .dm-photo { aspect-ratio: 3 / 4; max-height: 280px; }
+    .dm-roster-card .dm-photo { width: 100%; aspect-ratio: 3 / 4; max-height: 280px; }
     .dm-roster-card input[type="text"] {
       width: 100%;
       min-height: 36px;
@@ -669,7 +675,6 @@
       .group-cell { padding: 10px; gap: 8px 10px; }
       .group-top { display: block; }
       .dm-name { margin-top: 4px; font-size: clamp(13px, 1.2vw, 18px); }
-      .dm-photo { min-height: 56px; }
       .group-context { font-size: clamp(10px, .9vw, 13px); }
       .diver-list { gap: 3px; }
       .diver-row { min-height: 28px; padding: 0 6px; }
@@ -685,7 +690,6 @@
       .group-cell { padding: 10px; grid-template-columns: minmax(128px, 1.08fr) minmax(120px, 1.08fr); }
       .group-top { display: block; }
       .group-grid { gap: 8px 10px; padding-top: 14px; }
-      .dm-photo { min-height: 56px; }
     }
 
     @media (max-width: 900px) {
