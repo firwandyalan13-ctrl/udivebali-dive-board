@@ -438,7 +438,7 @@
     .group-grid { display: grid; flex: 1 1 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px 14px; min-height: 0; padding: 18px 0 8px; }
     .group-cell {
       display: grid;
-      grid-template-columns: minmax(96px, .88fr) minmax(120px, 1.22fr);
+      grid-template-columns: minmax(118px, 1.08fr) minmax(120px, 1.12fr);
       gap: 8px 10px;
       min-width: 0;
       min-height: 0;
@@ -522,7 +522,7 @@
       place-items: center;
       flex: 1 1 0;
       width: 100%;
-      min-height: 42px;
+      min-height: 72px;
       max-height: 100%;
       overflow: hidden;
       border: 2px solid #d3e6e7;
@@ -669,7 +669,7 @@
       .group-cell { padding: 10px; gap: 8px 10px; }
       .group-top { display: block; }
       .dm-name { margin-top: 4px; font-size: clamp(13px, 1.2vw, 18px); }
-      .dm-photo { min-height: 36px; }
+      .dm-photo { min-height: 56px; }
       .group-context { font-size: clamp(10px, .9vw, 13px); }
       .diver-list { gap: 3px; }
       .diver-row { min-height: 28px; padding: 0 6px; }
@@ -682,10 +682,10 @@
       .udive-logo-image { max-height: 120px; }
       .deck-date-card { max-width: 380px; padding: 20px 26px; }
       .schedule-column { gap: 20px; padding: 10px 20px; }
-      .group-cell { padding: 10px; grid-template-columns: minmax(110px, .95fr) minmax(120px, 1.15fr); }
+      .group-cell { padding: 10px; grid-template-columns: minmax(128px, 1.08fr) minmax(120px, 1.08fr); }
       .group-top { display: block; }
       .group-grid { gap: 8px 10px; padding-top: 14px; }
-      .dm-photo { min-height: 36px; }
+      .dm-photo { min-height: 56px; }
     }
 
     @media (max-width: 900px) {
@@ -697,7 +697,7 @@
       .schedule-column { grid-template-columns: 1fr 1fr 1fr 1fr; }
       .schedule-site { grid-column: 1 / -1; }
       .group-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none; }
-      .group-cell { grid-template-columns: minmax(100px, .9fr) minmax(120px, 1.2fr); }
+      .group-cell { grid-template-columns: minmax(118px, 1.05fr) minmax(120px, 1.15fr); }
       .session-header { grid-template-columns: 1fr 1.5fr; }
       .session-date { grid-column: 1 / -1; justify-self: end; }
     }
@@ -730,7 +730,7 @@
       .session-status { min-height: 42px; }
       .session-date { grid-column: auto; justify-self: start; }
       .group-grid { grid-template-columns: 1fr; grid-template-rows: none; padding-top: 18px; }
-      .group-cell { min-height: 0; grid-template-columns: minmax(110px, .9fr) minmax(140px, 1.2fr); }
+      .group-cell { min-height: 0; grid-template-columns: minmax(128px, 1.05fr) minmax(140px, 1.15fr); }
       .slide-footer { display: block; line-height: 1.5; }
       .slide-footer strong { display: block; margin-top: 8px; }
     }
